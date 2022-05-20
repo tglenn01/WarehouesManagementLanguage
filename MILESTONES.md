@@ -15,10 +15,10 @@ Pack, Move around, Provide inputs of instock items in warehouse, go figure out w
 * Maintain a database like structure which gets updated to reflect the user inputs and changes to stock/ inventory, etc
 
 ## Post TA Feedback
-Decided to not abstract away for loops from the user
-Give user ability to define a for loop as “RepeatActionForEachItem”
-Allow user to set up their own error handling with conditionals
-User can set up if else statements
+* Decided to not abstract away for loops from the user
+** Give user ability to define a for loop as “RepeatActionForEachItem”
+* Allow user to set up their own error handling with conditionals
+** User can set up if else statements
 
 ## User Study Task :
 Try to bring item to front of house to sell. In case the shelf is empty, check the capacity of the shelf and order that many more items and restock.
