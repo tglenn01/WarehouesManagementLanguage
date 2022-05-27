@@ -20,26 +20,43 @@ A general-purpose language has many unnecessary details which would not make the
 * 2D map with bot being a dot, items being colored, shelves as defined regions on a cartesian plot
 * Maintain a database-like structure that gets updated to reflect the user inputs and changes to stock/ inventory, etc.
 
-## Post TA Feedback
+## Post TA Feedback #1
 * We decided to not abstract away for loops from the user
 ** Give the user ability to define a for loop as “Repeat Action For Each Item.”
 * Allow user to set up their error handling with conditionals
 ** user can set up if-else statements
 
+## Post TA Feedback #2
+* Define shelves as item locations, customers can create shelves by one shelf per item rule. 
+* For function restockItem, accepting more parameters. 
+* The modified prototype, new and old version have been updated to github repo.
+* Two user studies are done, one with the old prototype and one with the new prototype
+
+Frontend : JavaFx/ Java2D
+Backend : Java
+
+## Implementation Plan :
+* Work as a group to finalize command names, grammar and node structure
+* Pair program to connect lexer/parser to AST design
+* Display funcitonality on console/ JavaFX GUI
+
+## Project Scope Update :
+* Decided to be less GUI focused and add more complexity to the language with varibales, arrays, loops and conditionals
 
 ## User Study Task :
 Try to bring the item to the front house to sell. If the shelf is empty, check the capacity of the shelf and order many more items and restock.
 
 ## Possible Instructions: 
-* If Else;
-* GoTo;
-* PickUpItem;
-* DropOffItem;
-* OrderNumberOfItems();
-* RepeatFor;
-* Restock;
-* CheckSizeOfShelf;
-* CheckAvailability.
+* if
+* ifNot
+* goTo;
+* pickUp;
+* dropOff;
+* restockOrder;
+* create;
+* fulfill;
+* every product in;
+* checkAvailability
 
 ## Sample User command: 
 GoTo(Warehouse)
@@ -50,18 +67,6 @@ GoTo(Warehouse)
 		variableNumberOfItems = CheckSizeOfShelf
 		OrderNumberOfiTems(Variable)
 RepeatActionForEachItem(variableNumberOfItems , action)
-
-## Basic Documentation:
-goto (....) //options: warehouse or fronthouse
-if warehouse: notify the users it’s already at location 
-pickupitem()
-return seg fault if empty
-dropoffitem() // works only for front house
-check_available()
-//for if statement 
-restockitem()
-repeat(//action)
-throw error if wrong input 
 
 ## Division of Labor:
 Three people do the code
