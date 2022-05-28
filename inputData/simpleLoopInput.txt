@@ -1,0 +1,11 @@
+create order customerOrder with 3 Pear, 6 Orange, 1 Watermelon;
+
+create products returnProducts;
+
+every product in customOrder {
+goTo product;
+pickup product to returnProduct;
+}
+
+goTo fronthouse;
+fulfill customerOrder with returnProducts;

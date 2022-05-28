@@ -1,0 +1,9 @@
+create order customerOrder with 3 Grape;
+
+create products returnProducts;
+
+goTo grape;
+pickup grape to returnProduct;
+
+goTo fronthouse;
+fulfill customerOrder with returnProducts;

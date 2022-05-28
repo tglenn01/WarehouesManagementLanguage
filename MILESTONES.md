@@ -47,8 +47,8 @@ Backend : Java
 Try to bring the item to the front house to sell. If the shelf is empty, check the capacity of the shelf and order many more items and restock.
 
 ## Possible Instructions: 
-* if
-* ifNot
+* if;
+* ifNot;
 * goTo;
 * pickUp;
 * dropOff;
@@ -59,14 +59,18 @@ Try to bring the item to the front house to sell. If the shelf is empty, check t
 * checkAvailability
 
 ## Sample User command: 
-GoTo(Warehouse)
-	if CheckAvailable()
-		PickUpItem
-		GoTo(Fronthouse)
-	else
-		variableNumberOfItems = CheckSizeOfShelf
-		OrderNumberOfiTems(Variable)
-RepeatActionForEachItem(variableNumberOfItems , action)
+create customerOrder with 3 Pear, 6 Orange, 1 Watermelon;
+
+create returnProducts;
+
+every product in customOrder {
+goTo product;
+pickup product to returnProduct;
+}
+
+goTo fronthouse;
+fulfill customerOrder with returnProducts;
+
 
 ## Division of Labor:
 Three people do the code

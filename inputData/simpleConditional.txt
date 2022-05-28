@@ -1,0 +1,13 @@
+create order customerOrder;
+
+if checkAvailability of Peanut {
+add Peanut to customerOrder;
+}
+
+create products returnProducts;
+
+goTo Grape;
+pickup Grape to returnProduct;
+
+goTo fronthouse;
+fulfill customerOrder with returnProducts;
