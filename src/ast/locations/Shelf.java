@@ -1,10 +1,14 @@
 package src.ast.locations;
 
+import exceptions.InsufficientProductsException;
 import exceptions.ProductNotOnShelfException;
 import src.ast.Node;
 import src.ast.Product;
+import src.ast.WarehouseRobotVisitor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // A shelf with an amount of products that are stored there
@@ -12,15 +16,31 @@ public class Shelf extends Node implements Location {
     public final static int MAX_QUANTITY_OF_PRODUCTS_IN_SHELF = 10;
 
     private Map<Product, Integer> products;
-    private int xLocation;
-    private int yLocation;
+    private List<Product> validProducts = new ArrayList<>();
+    private int warehouseLocation;
 
-    public Shelf(Map<Product, Integer> initializedShelf) {
-        products = initializedShelf;
+    public Shelf(Integer warehouseLocation, Map<Product, Integer> inventory, List<Product> validProducts) {
+        this.warehouseLocation = warehouseLocation;
+        this.products = inventory;
+        this.validProducts = validProducts;
     }
 
-    public Shelf() {
-        products = new HashMap<>();
+    public Shelf(Integer warehouseLocation, Map<Product, Integer> inventory) {
+        this.warehouseLocation = warehouseLocation;
+        this.products = inventory;
+        this.validProducts = new ArrayList<>();
+    }
+
+    public Shelf(Integer warehouseLocation, List<Product> validProducts) {
+        this.warehouseLocation = warehouseLocation;
+        this.products = new HashMap<>();
+        this.validProducts = validProducts;
+    }
+
+    public Shelf(Integer warehouseLocation) {
+        this.warehouseLocation = warehouseLocation;
+        this.products = new HashMap<>();
+        this.validProducts = new ArrayList<>();
     }
 
 
@@ -38,6 +58,21 @@ public class Shelf extends Node implements Location {
         //stub
     }
 
+    /**
+     *
+     * Picks up the given product from the shelf
+     *
+     * @param product: Product to be picked up from the shelf
+     * @param amount: amount of product to be picked up
+     *
+     * @throws InsufficientProductsException: If their is not enough of the product on the shelf
+     * @return : returns the map with the product and the amount given
+     *
+     */
+    public Map<Product, Integer> pickUpProduct(Product product, Integer amount) throws InsufficientProductsException {
+        //stub
+        return null;
+    }
 
     /**
      *
@@ -48,5 +83,33 @@ public class Shelf extends Node implements Location {
      */
     public void addProductToShelf(Product product) {
         // stub
+    }
+
+    /**
+     *
+     * Removes the product as a valid type of the shelf, updates products to have that as their new location
+     *
+     * @param product: product to be removes to the shelf
+     *
+     */
+    public void removeProductFromShelf(Product product) {
+        // stub
+    }
+
+    public Map<Product, Integer> getProductData() {
+        return new HashMap<>(products);
+    }
+
+    public List<Product> getValidProductData() {
+        return new ArrayList<>(validProducts);
+    }
+
+    public Integer getWarehouseLocation() {
+        return this.warehouseLocation;
+    }
+
+    @Override
+    public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
+        return v.visit(context, this);
     }
 }

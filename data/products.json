@@ -1,12 +1,1 @@
-{
-  "products": [
-    {
-      "name": "Apple",
-      "quantity": "7",
-      "location": "1, 5"},
-    {
-      "name": "Banana",
-      "quantity": "4",
-      "location": "2, 3"}
-  ]
-}
+{"shelves":[],"products":["Apple","Banana","Pear","Grape"]}

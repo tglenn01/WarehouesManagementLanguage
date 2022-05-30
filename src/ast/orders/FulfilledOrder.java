@@ -1,6 +1,7 @@
 package src.ast.orders;
 
 import src.ast.Product;
+import src.ast.WarehouseRobotVisitor;
 
 import java.util.Map;
 
@@ -26,4 +27,8 @@ public class FulfilledOrder extends Order {
         return null;
     }
 
+    @Override
+    public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
+        return v.visit(context, this);
+    }
 }

@@ -1,13 +1,15 @@
-package src.ast;
+package src.model;
 
 import exceptions.*;
+import src.ast.Node;
+import src.ast.Product;
 import src.ast.locations.FrontHouse;
 import src.ast.locations.Location;
 import src.ast.orders.CustomerOrder;
 
 import java.util.Map;
 
-public class Robot extends Node {
+public class Robot {
     private Location currentLocation;
     private Map<Product, Integer> currentInventory;
 

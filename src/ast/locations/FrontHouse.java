@@ -1,10 +1,12 @@
 package src.ast.locations;
 
+import src.ast.Node;
+import src.ast.WarehouseRobotVisitor;
 import src.ast.orders.CustomerOrder;
 import src.ast.orders.FulfilledOrder;
 
 // the front of house where all orders are fulfilled
-public class FrontHouse implements Location {
+public class FrontHouse extends Node implements Location {
     private static FrontHouse frontHouse;
 
     private FrontHouse() {}
@@ -25,6 +27,11 @@ public class FrontHouse implements Location {
      *
      */
     public void fulfill(CustomerOrder customerOrder, FulfilledOrder fulfilledOrder) {
+        // stub
+    }
 
+    @Override
+    public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
+        return v.visit(context, this);
     }
 }
