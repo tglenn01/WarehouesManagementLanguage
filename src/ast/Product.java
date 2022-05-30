@@ -1,23 +1,9 @@
 package src.ast;
 
-import src.ast.Node;
-import src.ast.locations.Shelf;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 // An item that has a name and assigned shelf
 public class Product extends Node {
-    public static final String[] VALID_PRODUCTS = {
-            "Apple",
-            "Banana",
-            "Pear",
-            "Grape"
-    };
-
-
-
-
 
     private String name;
     private Integer shelfLocation;
@@ -51,5 +37,18 @@ public class Product extends Node {
     @Override
     public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
         return v.visit(context, this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(name, product.name) && Objects.equals(shelfLocation, product.shelfLocation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, shelfLocation);
     }
 }

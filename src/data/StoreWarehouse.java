@@ -4,11 +4,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import src.ast.Product;
 import src.ast.locations.Shelf;
+import src.model.ProductMasterList;
 import src.model.Warehouse;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 public class StoreWarehouse {
@@ -28,41 +29,44 @@ public class StoreWarehouse {
     }
 
     private static void storeListOfProducts(JSONObject shelvesObject) {
-        JSONArray products = new JSONArray();
-        products.addAll(List.of(Product.VALID_PRODUCTS));
-        shelvesObject.put("products", products);
+        JSONArray productArray = new JSONArray();
+
+        productArray.addAll(Arrays.asList(ProductMasterList.VALID_PRODUCTS));
+
+        shelvesObject.put("products", productArray);
     }
 
     private static void storeShelves(Map<Integer, Shelf> shelves, JSONObject shelvesObject) {
         JSONArray storedShelves = new JSONArray();
 
-        shelves.forEach((location, shelf) -> {
-            JSONArray storedShelf = new JSONArray();
+        for (Map.Entry<Integer, Shelf> data : shelves.entrySet()) {
+            JSONObject storedShelf = new JSONObject();
+            Integer location = data.getKey();
+            Shelf shelf = data.getValue();
 
             storeShelfLocation(location, storedShelf);
             storeShelfValidProducts(shelf, storedShelf);
             storeShelfCurrentProducts(shelf, storedShelf);
 
-        });
+            storedShelves.add(storedShelf);
+        }
 
         shelvesObject.put("shelves", storedShelves);
     }
 
-    private static void storeShelfLocation(Integer location, JSONArray storedShelf) {
-        JSONObject locationObject = new JSONObject();
-        locationObject.put("location", location);
-        storedShelf.add(locationObject);
+    private static void storeShelfLocation(Integer location, JSONObject storedShelf) {
+        storedShelf.put("location", Integer.toString(location));
     }
 
-    private static void storeShelfValidProducts(Shelf shelf, JSONArray storedShelf) {
+    private static void storeShelfValidProducts(Shelf shelf, JSONObject storedShelf) {
         JSONArray validProductsArray = new JSONArray();
         for (Product product : shelf.getValidProductData()) {
             validProductsArray.add(product.getName());
         }
-        storedShelf.add(validProductsArray);
+        storedShelf.put("validProducts", validProductsArray);
     }
 
-    private static void storeShelfCurrentProducts(Shelf shelf, JSONArray storedShelf) {
+    private static void storeShelfCurrentProducts(Shelf shelf, JSONObject storedShelf) {
         JSONArray currentProductArray = new JSONArray();
         Map<Product, Integer> products = shelf.getProductData();
 
@@ -73,11 +77,6 @@ public class StoreWarehouse {
             currentProductArray.add(productObject);
         });
 
-        JSONObject currentInventory = new JSONObject();
-        currentInventory.put("inventory", currentProductArray);
-
-        storedShelf.add(currentInventory);
+        storedShelf.put("inventory", currentProductArray);
     }
-
-
 }

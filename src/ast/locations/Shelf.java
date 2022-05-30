@@ -15,31 +15,31 @@ import java.util.Map;
 public class Shelf extends Node implements Location {
     public final static int MAX_QUANTITY_OF_PRODUCTS_IN_SHELF = 10;
 
-    private Map<Product, Integer> products;
-    private List<Product> validProducts = new ArrayList<>();
+    private Map<Product, Integer> inventory;
+    private List<Product> validProducts;
     private int warehouseLocation;
 
     public Shelf(Integer warehouseLocation, Map<Product, Integer> inventory, List<Product> validProducts) {
         this.warehouseLocation = warehouseLocation;
-        this.products = inventory;
+        this.inventory = inventory;
         this.validProducts = validProducts;
     }
 
     public Shelf(Integer warehouseLocation, Map<Product, Integer> inventory) {
         this.warehouseLocation = warehouseLocation;
-        this.products = inventory;
+        this.inventory = inventory;
         this.validProducts = new ArrayList<>();
     }
 
     public Shelf(Integer warehouseLocation, List<Product> validProducts) {
         this.warehouseLocation = warehouseLocation;
-        this.products = new HashMap<>();
+        this.inventory = new HashMap<>();
         this.validProducts = validProducts;
     }
 
     public Shelf(Integer warehouseLocation) {
         this.warehouseLocation = warehouseLocation;
-        this.products = new HashMap<>();
+        this.inventory = new HashMap<>();
         this.validProducts = new ArrayList<>();
     }
 
@@ -55,7 +55,15 @@ public class Shelf extends Node implements Location {
      *
      */
     public void restockProduct(Product product, Integer amount) throws ProductNotOnShelfException {
-        //stub
+        if (!validProducts.contains(product)) {
+            throw new ProductNotOnShelfException();
+        }
+
+        if (inventory.containsKey(product)) {
+            amount = inventory.get(product);
+        }
+
+        inventory.put(product, amount);
     }
 
     /**
@@ -82,7 +90,9 @@ public class Shelf extends Node implements Location {
      *
      */
     public void addProductToShelf(Product product) {
-        // stub
+        if (!validProducts.contains(product)) {
+            validProducts.add(product);
+        }
     }
 
     /**
@@ -97,7 +107,7 @@ public class Shelf extends Node implements Location {
     }
 
     public Map<Product, Integer> getProductData() {
-        return new HashMap<>(products);
+        return new HashMap<>(inventory);
     }
 
     public List<Product> getValidProductData() {

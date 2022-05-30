@@ -25,25 +25,32 @@ public class LoadWarehouse {
 
         JSONObject shelvesObject = (JSONObject) parser.parse(reader);
 
-        JSONArray validProducts = (JSONArray) shelvesObject.get("products");
+        loadProducts(shelvesObject);
+        loadShelves(warehouse, shelvesObject);
+    }
 
+    private static void loadProducts(JSONObject shelvesObject) {
+        // nothing to do with this data yet
+    }
+
+    private static void loadShelves(Warehouse warehouse, JSONObject shelvesObject) throws ProductNotOnShelfException {
         JSONArray shelves = (JSONArray) shelvesObject.get("shelves");
 
         for (Object shelfFromJson : shelves) {
             JSONObject shelfData = (JSONObject) shelfFromJson;
 
-            Integer shelfLocation = (Integer) shelfData.get("location");
+            Integer shelfLocation = Integer.parseInt((String) shelfData.get("location"));
             Shelf warehouseShelf = warehouse.getShelfAtLocation(shelfLocation);
 
-            loadShelfValidProducts(shelfData, warehouseShelf);
+            loadShelfValidProducts(shelfLocation, shelfData, warehouseShelf);
             loadShelfInventory(shelfLocation, shelfData, warehouseShelf);
         }
     }
 
-    private static void loadShelfValidProducts(JSONObject shelfData, Shelf warehouseShelf) {
-        List<Product> validShelfProducts = (List<Product>) shelfData.get("validProducts");
-        for (Product product : validShelfProducts) {
-            warehouseShelf.addProductToShelf(product);
+    private static void loadShelfValidProducts(Integer shelfLocation, JSONObject shelfData, Shelf warehouseShelf) {
+        List<String> validShelfProducts = (List<String>) shelfData.get("validProducts");
+        for (String name : validShelfProducts) {
+            warehouseShelf.addProductToShelf(new Product(name, shelfLocation));
         }
     }
 
@@ -54,7 +61,7 @@ public class LoadWarehouse {
             JSONObject shelfProduct = (JSONObject) productInShelfInventory;
 
             String productName = (String) shelfProduct.get("name");
-            Integer productQuantity = (Integer) shelfProduct.get("quantity");
+            Integer productQuantity = ((Long) shelfProduct.get("quantity")).intValue();
 
             Product createdProduct = new Product(productName, shelfLocation);
 
