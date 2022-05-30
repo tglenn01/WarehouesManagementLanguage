@@ -1,6 +1,6 @@
 package src.data;
 
-import exceptions.ProductNotOnShelfException;
+import exceptions.ProductNotValidOnShelfException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,7 +9,6 @@ import src.ast.Product;
 import src.ast.locations.Shelf;
 import src.model.Warehouse;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -18,7 +17,7 @@ import java.util.List;
 public class LoadWarehouse {
 
     // loads all data from the data folder into the warehouse
-    public static void loadWarehouse(Warehouse warehouse, String fileLocation) throws IOException, ParseException, ProductNotOnShelfException {
+    public static void loadWarehouse(Warehouse warehouse, String fileLocation) throws IOException, ParseException, ProductNotValidOnShelfException {
         JSONParser parser = new JSONParser();
 
         Reader reader = new FileReader(fileLocation);
@@ -33,7 +32,7 @@ public class LoadWarehouse {
         // nothing to do with this data yet
     }
 
-    private static void loadShelves(Warehouse warehouse, JSONObject shelvesObject) throws ProductNotOnShelfException {
+    private static void loadShelves(Warehouse warehouse, JSONObject shelvesObject) throws ProductNotValidOnShelfException {
         JSONArray shelves = (JSONArray) shelvesObject.get("shelves");
 
         for (Object shelfFromJson : shelves) {
@@ -54,7 +53,7 @@ public class LoadWarehouse {
         }
     }
 
-    private static void loadShelfInventory(Integer shelfLocation, JSONObject shelfData, Shelf warehouseShelf) throws ProductNotOnShelfException {
+    private static void loadShelfInventory(Integer shelfLocation, JSONObject shelfData, Shelf warehouseShelf) throws ProductNotValidOnShelfException {
         JSONArray shelfInventory = (JSONArray) shelfData.get("inventory");
 
         for (Object productInShelfInventory : shelfInventory) {

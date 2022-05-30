@@ -3,6 +3,7 @@ package src.ast.orders;
 import src.ast.Node;
 import src.ast.Product;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Order extends Node {
@@ -10,6 +11,18 @@ public abstract class Order extends Node {
 
     // Adds product to order with given amount
     public void add(Product product, Integer amount) {
-        // stub
+        int amountToAdd;
+
+        if (order.containsKey(product)) {
+            amountToAdd = order.get(product) + amount;
+        } else {
+            amountToAdd = amount;
+        }
+
+        order.put(product, amountToAdd);
+    }
+
+    public Map<Product, Integer> getOrderData() {
+        return new HashMap<>(order);
     }
 }

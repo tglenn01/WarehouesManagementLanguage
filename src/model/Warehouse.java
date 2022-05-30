@@ -2,6 +2,7 @@ package src.model;
 
 import exceptions.InvalidLocationException;
 import exceptions.NoSuchProductException;
+import exceptions.ProductNotValidOnShelfException;
 import src.ast.Node;
 import src.ast.Product;
 import src.ast.locations.Shelf;
@@ -9,6 +10,7 @@ import src.ast.locations.Shelf;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 // The warehouse where all products are stored in their respective shelves
 public class Warehouse {
@@ -28,14 +30,16 @@ public class Warehouse {
      * @param product: Product to check
      * @param amount: Amount needed
      *
-     * @throws NoSuchProductException: if the product we are asking for could not be found
+     * @throws ProductNotValidOnShelfException: if the product we are asking for could not be found
      *
      * @return true if available else false
      *
      */
-    public boolean checkAvailability(Product product, Integer amount) throws NoSuchProductException {
-        // stub
-        return false;
+    public boolean checkAvailability(Product product, Integer amount) throws ProductNotValidOnShelfException {
+        int shelfLocation = product.getProductShelfLocation();
+        Shelf shelf = shelves.get(shelfLocation);
+
+        return shelf.hasEnoughProduct(product, amount);
     }
 
 
@@ -47,12 +51,26 @@ public class Warehouse {
      *
      */
     public void updateShelf(Shelf shelf, Integer location) throws InvalidLocationException {
+        if (!shelves.containsKey(location)) {
+            throw new InvalidLocationException("Shelf at location " + location + " does not exist");
+        }
 
+        shelves.put(location, shelf);
     }
 
 
     public Shelf getShelfAtLocation(Integer location) {
         return shelves.get(location);
+    }
+
+    public boolean doesShelfLocationExist(Integer shelfLocation) {
+        for (Shelf shelf : shelves.values()) {
+            if (Objects.equals(shelf.getWarehouseLocation(), shelfLocation)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // returns a copy of the warehouse shelves

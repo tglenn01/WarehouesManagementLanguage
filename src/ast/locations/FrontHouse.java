@@ -25,9 +25,16 @@ public class FrontHouse extends Node implements Location {
      * @param customerOrder: The customer order
      * @param fulfilledOrder: The fulfilled order given to the customer
      *
+     * @return returns a string expressing how the order went
+     *
      */
-    public void fulfill(CustomerOrder customerOrder, FulfilledOrder fulfilledOrder) {
-        // stub
+    public StringBuilder fulfill(CustomerOrder customerOrder, FulfilledOrder fulfilledOrder) {
+        StringBuilder fulfilledRequest = fulfilledOrder.compareWithRequest(customerOrder);
+        return fulfilledRequest;
+    }
+
+    public String getLocationName() {
+        return "Front of House";
     }
 
     @Override

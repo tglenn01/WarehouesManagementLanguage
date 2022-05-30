@@ -1,19 +1,17 @@
 package src.ast.locations;
 
 import exceptions.InsufficientProductsException;
-import exceptions.ProductNotOnShelfException;
+import exceptions.ProductNotValidOnShelfException;
 import src.ast.Node;
 import src.ast.Product;
 import src.ast.WarehouseRobotVisitor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // A shelf with an amount of products that are stored there
 public class Shelf extends Node implements Location {
-    public final static int MAX_QUANTITY_OF_PRODUCTS_IN_SHELF = 10;
+    // TODO: implement a max quantity of products in a shelf
+    // public final static int MAX_QUANTITY_OF_PRODUCTS_IN_SHELF = 10;
 
     private Map<Product, Integer> inventory;
     private List<Product> validProducts;
@@ -51,19 +49,23 @@ public class Shelf extends Node implements Location {
      * @param product: Product to be added to shelf
      * @param amount: amount of product to be added to the shelf
      *
-     * @throws ProductNotOnShelfException: If the product is trying to be added to the incorrect shelf
+     * @throws ProductNotValidOnShelfException : If the product is trying to be added to the incorrect shelf
      *
      */
-    public void restockProduct(Product product, Integer amount) throws ProductNotOnShelfException {
+    public void restockProduct(Product product, Integer amount) throws ProductNotValidOnShelfException {
         if (!validProducts.contains(product)) {
-            throw new ProductNotOnShelfException();
+            throw new ProductNotValidOnShelfException(product, this.warehouseLocation);
         }
+
+        int newAmount;
 
         if (inventory.containsKey(product)) {
-            amount = inventory.get(product);
+            newAmount = inventory.get(product) + amount;
+        } else {
+            newAmount = amount;
         }
 
-        inventory.put(product, amount);
+        inventory.put(product, newAmount);
     }
 
     /**
@@ -73,13 +75,32 @@ public class Shelf extends Node implements Location {
      * @param product: Product to be picked up from the shelf
      * @param amount: amount of product to be picked up
      *
-     * @throws InsufficientProductsException: If their is not enough of the product on the shelf
-     * @return : returns the map with the product and the amount given
+     * @throws InsufficientProductsException: If there is not enough of the product on the shelf
+     * @return returns the map with the product and the amount given
      *
      */
-    public Map<Product, Integer> pickUpProduct(Product product, Integer amount) throws InsufficientProductsException {
-        //stub
-        return null;
+    public Map<Product, Integer> pickUpProduct(Product product, Integer amount) throws InsufficientProductsException, ProductNotValidOnShelfException {
+        if (!validProducts.contains(product)) {
+            throw new ProductNotValidOnShelfException(product, this.warehouseLocation);
+        }
+
+        if (!inventory.containsKey(product) || (inventory.get(product) < amount)) {
+            throw new InsufficientProductsException();
+        }
+
+        Integer currentAmountOfProduct = inventory.get(product);
+        int newAmountOfProduct = currentAmountOfProduct - amount;
+
+        if (newAmountOfProduct == 0) {
+            inventory.remove(product);
+        } else {
+            inventory.put(product, newAmountOfProduct);
+        }
+
+        Map<Product, Integer> returnVal = new HashMap<>();
+        returnVal.put(product, amount);
+
+        return returnVal;
     }
 
     /**
@@ -93,6 +114,11 @@ public class Shelf extends Node implements Location {
         if (!validProducts.contains(product)) {
             validProducts.add(product);
         }
+
+        if (product.getProductShelfLocation() != this.warehouseLocation) {
+            product.updateShelfLocation(this.warehouseLocation);
+        }
+
     }
 
     /**
@@ -102,8 +128,49 @@ public class Shelf extends Node implements Location {
      * @param product: product to be removes to the shelf
      *
      */
-    public void removeProductFromShelf(Product product) {
-        // stub
+    public void removeProductFromShelf(Product product) throws ProductNotValidOnShelfException {
+        if (!validProducts.contains(product)) {
+            throw new ProductNotValidOnShelfException(product, this.warehouseLocation);
+        }
+
+        if (inventory.containsKey(product)) {
+            inventory.remove(product);
+        }
+
+        validProducts.remove(product);
+    }
+
+    // returns if the product is a part of the valid products
+    public boolean isProductValid(Product product) {
+        return validProducts.contains(product);
+    }
+
+    public boolean hasEnoughProduct(Product product, Integer amountNeeded) throws ProductNotValidOnShelfException {
+        if (!validProducts.contains(product)) {
+            throw new ProductNotValidOnShelfException(product, this.warehouseLocation);
+        }
+
+        if (!inventory.containsKey(product)) {
+            return false;
+        }
+
+        return inventory.get(product) >= amountNeeded;
+    }
+
+    public Integer getAmountOfProductLeft(Product product) throws ProductNotValidOnShelfException {
+        if (!validProducts.contains(product)) {
+            throw new ProductNotValidOnShelfException(product, this.warehouseLocation);
+        }
+
+        if (!inventory.containsKey(product)) {
+            return 0;
+        }
+
+        return inventory.get(product);
+    }
+
+    public String getLocationName() {
+        return "Shelf: " + warehouseLocation;
     }
 
     public Map<Product, Integer> getProductData() {
@@ -121,5 +188,18 @@ public class Shelf extends Node implements Location {
     @Override
     public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
         return v.visit(context, this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shelf shelf = (Shelf) o;
+        return warehouseLocation == shelf.warehouseLocation;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(warehouseLocation);
     }
 }
