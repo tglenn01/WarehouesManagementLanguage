@@ -1,22 +1,22 @@
 create order customerOrder1 with 5 Apple, 2 Banana;
 
-ifNot check availability with customerOrder1 {
+ifNot check availability of customerOrder1 {
 
 create products newProducts;
-restock newProducts with customerOrder1;
+restock newProducts with order customerOrder1;
 
-every product in newProducts {
+every product in products newProducts {
 goTo product;
-dropOff product;
+dropoff product;
 }
 }
 
 create products returnProducts;
 
-every product in customOrder {
+every product in order customOrder1 {
 goTo product;
-pickup product to returnProduct;
+pickup product to products returnProduct;
 }
 
 goTo fronthouse;
-fulfill customerOrder with returnProducts;
+fulfill customerOrder1 with products returnProducts;

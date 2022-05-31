@@ -1,13 +1,13 @@
-create order customerOrder;
+create order customerOrder1;
 
-if checkAvailability of Peanut {
-add Peanut to customerOrder;
+if check availability of 5 Peanut {
+add 5 Peanut to order customerOrder1;
 }
 
 create products returnProducts;
 
 goTo Grape;
-pickup Grape to returnProduct;
+pickup Grape to products returnProducts;
 
 goTo fronthouse;
-fulfill customerOrder with returnProducts;
+fulfill customerOrder1 with products returnProducts;
