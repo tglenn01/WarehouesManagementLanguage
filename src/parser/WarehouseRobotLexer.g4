@@ -6,7 +6,7 @@ CREATE_PRODUCTS:      'create products' -> mode(PRODUCTS_MODE);
 
 // structures
 EVERY:                'every' -> mode(VARIABLE_MODE);
-IF_NOT:               'if not';
+IF_NOT:               'ifNot';
 IF:                   'if';
 
 // statements
