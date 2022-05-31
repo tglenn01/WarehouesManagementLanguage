@@ -1,10 +1,15 @@
 parser grammar WarehouseRobotParser;
 options { tokenVocab=WarehouseRobotLexer; }
 
-program:           (call | statement | expression)*;
+program:           (argument | call | structure | statement | expression)* ;
 
-argument:          order_varname | products_varname | variable_varname | PRODUCT | NUM;
-call:              loop | if | if_not | create_order | create_products ;
+// lines of codes that run themselves, aka not arugments and expresssions, aka methods
+runnable_nodes:    call | structure | statement ;
+
+// node types
+argument:          order_varname | products_varname | variable_varname | PRODUCT | NUM ;
+call:              create_order | create_products ;
+structure:         loop | if | if_not ;
 statement:         goto | pickup | dropoff | restock_order | fulfill | add;
 expression:        check_availiblity ;
 
@@ -15,11 +20,13 @@ products_varname:  RETURN_PRODUCTS ;
 variable_varname:  VARIABLE_NAME ;
 
 // calls
-loop:              EVERY variable_varname (IN_ORDER | IN_PRODUCTS) iterable LEFT_BRACE (statement | call)* RIGHT_BRACE ;
-if:                IF expression LEFT_BRACE (statement | call)* RIGHT_BRACE ;
-if_not:            IF_NOT expression LEFT_BRACE (statement | call)* RIGHT_BRACE ;
 create_order:      CREATE_ORDER order_varname (WITH NUM PRODUCT (COMMA NUM PRODUCT)*)? SEMICOLON ;
 create_products:   CREATE_PRODUCTS products_varname SEMICOLON ;
+
+// structures
+loop:              EVERY variable_varname (IN_ORDER | IN_PRODUCTS) iterable LEFT_BRACE (runnable_nodes)* RIGHT_BRACE ;
+if:                IF expression LEFT_BRACE (runnable_nodes)* RIGHT_BRACE ;
+if_not:            IF_NOT expression LEFT_BRACE (runnable_nodes)* RIGHT_BRACE ;
 
 // statements
 goto:              GOTO (VARIABLE_PRODUCT | VARIABLE_FRONTHOUSE | variable_varname) SEMICOLON ;

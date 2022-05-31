@@ -1,4 +1,4 @@
-package src.ast.conditionals;
+package src.ast.structures.conditionals;
 
 import src.ast.WarehouseRobotVisitor;
 

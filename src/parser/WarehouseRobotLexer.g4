@@ -1,11 +1,13 @@
 lexer grammar WarehouseRobotLexer;
 
 // calls
+CREATE_ORDER:         'create order' -> mode(ORDER_MODE);
+CREATE_PRODUCTS:      'create products' -> mode(PRODUCTS_MODE);
+
+// structures
 EVERY:                'every' -> mode(VARIABLE_MODE);
 IF:                   'if';
 IF_NOT:               'ifNot';
-CREATE_ORDER:         'create order' -> mode(ORDER_MODE);
-CREATE_PRODUCTS:      'create products' -> mode(PRODUCTS_MODE);
 
 // statements
 GOTO:                 'goTo' -> mode(VARIABLE_MODE);
@@ -22,14 +24,14 @@ CHECK_AVAILABILTIY:   'check availability of' -> mode(ORDER_MODE);
 WITH_ORDER:           'with order' -> mode(ORDER_MODE);
 WITH_PRODUCTS:        'with products' -> mode(PRODUCTS_MODE);
 
-WITH:                 'with';
-OF:                   'of' ;
-
 IN_ORDER:             'in order' -> mode(ORDER_MODE);
 IN_PRODUCTS:          'in products' -> mode(PRODUCTS_MODE);
 
 TO_ORDER:             'to order' -> mode(ORDER_MODE);
 TO_PRODUCTS:          'to products' -> mode(PRODUCTS_MODE);
+
+WITH:                 'with';
+OF:                   'of' ;
 
 FRONTHOUSE:           'fronthouse';
 
@@ -42,6 +44,7 @@ PRODUCT:              'Apple' | 'Banana' | 'Pear' | 'Grape' | 'Pomegranete' | 'W
                       'Peach' | 'Milk' | 'Egg' | 'Pork' | 'Beef' | 'Chicken' | 'Granola' | 'Tea' |
                       'Coffee' | 'Pizza' | 'Soda' | 'Carror' | 'Pepper' | 'Water' | 'Bagel' | 'Bread' |
                       'Cheese' | 'Fries' | 'Lemon' | 'Orange' ;
+
 NUM:                  [0-9]+;
 
 WHITE_SPACE:          [ \t]+ -> skip;

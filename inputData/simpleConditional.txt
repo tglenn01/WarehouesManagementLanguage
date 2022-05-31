@@ -1,7 +1,7 @@
 create order customerOrder1;
 
-if check availability of 5 Peanut {
-add 5 Peanut to order customerOrder1;
+if check availability of 5 Coffee {
+add 5 Coffee to order customerOrder1;
 }
 
 create products returnProducts;
