@@ -7,9 +7,7 @@ import src.ast.locations.Shelf;
 import src.data.LoadWarehouse;
 import src.data.StoreWarehouse;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Random;
 
 public class InventoryManager {
@@ -18,7 +16,8 @@ public class InventoryManager {
     public static Warehouse warehouse;
     public static Robot robot;
 
-    public InventoryManager()  {}
+    public InventoryManager() {
+    }
 
     public static void execute() throws IOException, ParseException, ProductNotValidOnShelfException {
         WarehouseFactory warehouseFactory = new NormalWarehouseFactory();
@@ -28,7 +27,7 @@ public class InventoryManager {
         LoadWarehouse.loadWarehouse(warehouse, DATA_FILE_LOCATION);
 
         robot = new Robot();
-        
+
         StoreWarehouse.storeWarehouse(warehouse, DATA_FILE_LOCATION);
     }
 

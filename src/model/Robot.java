@@ -1,7 +1,6 @@
 package src.model;
 
 import exceptions.*;
-import src.Main;
 import src.ast.Product;
 import src.ast.locations.FrontHouse;
 import src.ast.locations.Location;
@@ -18,19 +17,17 @@ public class Robot {
 
     public Robot() {
         currentLocation = FrontHouse.getInstance();
+        currentInventory = new HashMap<>();
     }
 
     /**
+     * Adds product from current shelf to currentInventory with certain amount
      *
-     *   Adds product from current shelf to currentInventory with certain amount
-     *
-     *   @param product: The product to be picked up
-     *   @param amount: Amount of product to pick up
-     *
-     *   @throws ProductNotValidOnShelfException : throws if product is not stored in current shelf
-     *   @throws InvalidLocationException : throws if the robot is told to pickup while at an invalid location
-     *
-     * */
+     * @param product: The product to be picked up
+     * @param amount:  Amount of product to pick up
+     * @throws ProductNotValidOnShelfException : throws if product is not stored in current shelf
+     * @throws InvalidLocationException        : throws if the robot is told to pickup while at an invalid location
+     */
     public void pickup(StringBuilder context, Product product, Integer amount) throws ProductNotValidOnShelfException, InvalidLocationException {
         if (currentLocation == FrontHouse.getInstance()) {
             throw new InvalidLocationException("Robot trying to pick up product while at the Front of House");
@@ -90,14 +87,11 @@ public class Robot {
 
 
     /**
-     *
      * drops of all the given products at location
      *
      * @param product: product to drop off
-     *
-     * @throws InvalidLocationException: throws if dropping off item at invalid location
+     * @throws InvalidLocationException:  throws if dropping off item at invalid location
      * @throws RobotDoesNotHaveException: throws if robot does not have given product
-     *
      */
     public void dropOff(Product product) throws InvalidLocationException, RobotDoesNotHaveException, ProductNotValidOnShelfException {
         if (currentLocation == FrontHouse.getInstance()) {
@@ -122,11 +116,9 @@ public class Robot {
 
 
     /**
-     *
      * Moves the robot from its current location to the new location
      *
      * @param location: Location for the Robot to move
-     *
      */
     public void goTo(Location location) {
         this.currentLocation = location;
@@ -134,12 +126,10 @@ public class Robot {
 
 
     /**
-     *
      * Creates the offical fulfilled order and sends the front of house the fulfilled order
      *
      * @param order: The customer order that needs to be fulfilled
      * @throws NotFrontOfHouseException: throws if robot is not currently at the front of house
-     *
      */
     public StringBuilder fulfill(CustomerOrder order) throws NotFrontOfHouseException {
         if (this.currentLocation != FrontHouse.getInstance()) {

@@ -1,14 +1,11 @@
 package src.model;
 
 import exceptions.InvalidLocationException;
-import exceptions.NoSuchProductException;
 import exceptions.ProductNotValidOnShelfException;
-import src.ast.Node;
 import src.ast.Product;
 import src.ast.locations.Shelf;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -19,21 +16,18 @@ public class Warehouse {
     public Warehouse(Map<Integer, Shelf> filledShelves) {
         this.shelves = filledShelves;
     }
+
     public Warehouse() {
         shelves = null;
     }
 
     /**
-     *
      * Check if there is enough amount of the given product
      *
      * @param product: Product to check
-     * @param amount: Amount needed
-     *
-     * @throws ProductNotValidOnShelfException: if the product we are asking for could not be found
-     *
+     * @param amount:  Amount needed
      * @return true if available else false
-     *
+     * @throws ProductNotValidOnShelfException: if the product we are asking for could not be found
      */
     public boolean checkAvailability(Product product, Integer amount) throws ProductNotValidOnShelfException {
         int shelfLocation = product.getProductShelfLocation();
@@ -46,9 +40,8 @@ public class Warehouse {
     /**
      * Updates shelf at given location
      *
-     * @param shelf: shelf to be replaced
+     * @param shelf:    shelf to be replaced
      * @param location: shelf location
-     *
      */
     public void updateShelf(Shelf shelf, Integer location) throws InvalidLocationException {
         if (!shelves.containsKey(location)) {
