@@ -1,5 +1,6 @@
-package src.ast;
+package src.ast.statements;
 
+import src.ast.WarehouseRobotVisitor;
 import src.ast.orders.CustomerOrder;
 
 public class Fulfill extends Statement {

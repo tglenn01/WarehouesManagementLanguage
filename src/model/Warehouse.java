@@ -2,8 +2,8 @@ package src.model;
 
 import exceptions.InvalidLocationException;
 import exceptions.ProductNotValidOnShelfException;
-import src.ast.Product;
-import src.ast.locations.Shelf;
+import src.ast.arugments.Product;
+import src.ast.arugments.locations.Shelf;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,7 @@
-package src.ast;
+package src.ast.statements;
 
-import src.ast.locations.Location;
+import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.locations.Location;
 
 public class GoTo extends Statement {
     public Location location;

@@ -1,5 +1,7 @@
 package src.ast;
 
+import src.ast.statements.Statement;
+
 import java.util.List;
 
 public class Program extends Node {

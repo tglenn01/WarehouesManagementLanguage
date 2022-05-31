@@ -1,7 +1,7 @@
-package src.ast.locations;
+package src.ast.arugments.locations;
 
-import src.ast.Argument;
 import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Argument;
 import src.ast.orders.CustomerOrder;
 import src.ast.orders.FulfilledOrder;
 

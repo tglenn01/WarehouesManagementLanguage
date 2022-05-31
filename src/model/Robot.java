@@ -1,10 +1,10 @@
 package src.model;
 
 import exceptions.*;
-import src.ast.Product;
-import src.ast.locations.FrontHouse;
-import src.ast.locations.Location;
-import src.ast.locations.Shelf;
+import src.ast.arugments.Product;
+import src.ast.arugments.locations.FrontHouse;
+import src.ast.arugments.locations.Location;
+import src.ast.arugments.locations.Shelf;
 import src.ast.orders.CustomerOrder;
 import src.ast.orders.FulfilledOrder;
 

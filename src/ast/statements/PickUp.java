@@ -1,14 +1,13 @@
-package src.ast;
+package src.ast.statements;
 
-import src.ast.locations.Shelf;
+import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Product;
 
-public class RestockOrder extends Statement {
-    public Shelf shelf;
+public class PickUp extends Statement {
     public Product product;
     public Integer amount;
 
-    public RestockOrder(Shelf shelf, Product product, Integer amount) {
-        this.shelf = shelf;
+    public PickUp(Product product, Integer amount) {
         this.product = product;
         this.amount = amount;
     }

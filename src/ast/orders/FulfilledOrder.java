@@ -1,7 +1,7 @@
 package src.ast.orders;
 
-import src.ast.Product;
 import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Product;
 
 import java.util.Map;
 

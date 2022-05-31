@@ -1,4 +1,6 @@
-package src.ast;
+package src.ast.statements;
+
+import src.ast.WarehouseRobotVisitor;
 
 public class Every extends Statement {
     @Override

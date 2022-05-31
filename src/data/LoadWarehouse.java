@@ -5,8 +5,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import src.ast.Product;
-import src.ast.locations.Shelf;
+import src.ast.arugments.Product;
+import src.ast.arugments.locations.Shelf;
 import src.model.Warehouse;
 
 import java.io.FileReader;

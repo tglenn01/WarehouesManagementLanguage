@@ -1,10 +1,10 @@
-package src.ast.locations;
+package src.ast.arugments.locations;
 
 import exceptions.InsufficientProductsException;
 import exceptions.ProductNotValidOnShelfException;
-import src.ast.Argument;
-import src.ast.Product;
 import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Argument;
+import src.ast.arugments.Product;
 
 import java.util.*;
 

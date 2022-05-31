@@ -1,4 +1,4 @@
-package src;
+package src.ast.expressions;
 
 import src.ast.Node;
 

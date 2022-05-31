@@ -1,6 +1,6 @@
 package exceptions;
 
-import src.ast.Product;
+import src.ast.arugments.Product;
 
 public class ProductNotValidOnShelfException extends Exception {
 

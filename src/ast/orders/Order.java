@@ -1,7 +1,7 @@
 package src.ast.orders;
 
-import src.ast.Argument;
-import src.ast.Product;
+import src.ast.arugments.Argument;
+import src.ast.arugments.Product;
 
 import java.util.HashMap;
 import java.util.Map;

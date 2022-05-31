@@ -1,7 +1,8 @@
-package src.ast;
+package src.ast.arugments;
 
 import exceptions.ProductNotValidOnShelfException;
-import src.ast.locations.Shelf;
+import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.locations.Shelf;
 import src.model.InventoryManager;
 import src.model.Warehouse;
 

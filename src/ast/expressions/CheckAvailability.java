@@ -1,6 +1,7 @@
-package src.ast;
+package src.ast.expressions;
 
-import src.Expression;
+import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Product;
 
 public class CheckAvailability extends Expression {
     public Product product;

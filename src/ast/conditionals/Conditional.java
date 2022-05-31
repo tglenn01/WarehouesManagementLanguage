@@ -1,4 +1,6 @@
 package src.ast.conditionals;
 
-public interface Conditional {
+import src.ast.Node;
+
+public abstract class Conditional extends Node {
 }
