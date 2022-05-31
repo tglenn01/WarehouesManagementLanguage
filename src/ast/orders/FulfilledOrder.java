@@ -1,6 +1,7 @@
 package src.ast.orders;
 
 import src.ast.Product;
+import src.ast.WarehouseRobotVisitor;
 
 import java.util.Map;
 
@@ -21,9 +22,30 @@ public class FulfilledOrder extends Order {
      * @return returns a string detailed if all items are fulfilled or some were skipped
      *
      */
-    public String compareWithRequest(CustomerOrder customerOrder) {
-        // stub
-        return null;
+    public StringBuilder compareWithRequest(CustomerOrder customerOrder) {
+        StringBuilder compareResults = new StringBuilder();
+
+        for (Map.Entry<Product, Integer> entry : customerOrder.getOrderData().entrySet()) {
+            Product product = entry.getKey();
+            Integer amountNeeded = entry.getValue();
+
+            Integer amountOfProductsFulfilled = this.order.get(product);
+
+            if (amountOfProductsFulfilled == 0) {
+                compareResults.append("We were out of stock of ").append(product.getName());
+            } else if (amountOfProductsFulfilled < amountNeeded) {
+                compareResults.append("We only had ").append(amountOfProductsFulfilled).append(" Of ").append(product.getName());
+            } else {
+                compareResults.append("We had all of the ").append(product.getName()).append(" you requested!");
+            }
+
+        }
+
+        return compareResults;
     }
 
+    @Override
+    public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
+        return v.visit(context, this);
+    }
 }

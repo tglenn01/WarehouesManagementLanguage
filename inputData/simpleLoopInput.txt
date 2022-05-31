@@ -1,11 +1,11 @@
-create order customerOrder with 3 Pear, 6 Orange, 1 Watermelon;
+create order customerOrder1 with 3 Pear, 6 Orange, 1 Watermelon;
 
 create products returnProducts;
 
-every product in customOrder {
+every product in order customOrder1 {
 goTo product;
-pickup product to returnProduct;
+pickup product to products returnProduct;
 }
 
 goTo fronthouse;
-fulfill customerOrder with returnProducts;
+fulfill customerOrder1 with products returnProducts;

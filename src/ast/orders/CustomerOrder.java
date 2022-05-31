@@ -1,6 +1,7 @@
 package src.ast.orders;
 
 import src.ast.Product;
+import src.ast.WarehouseRobotVisitor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,4 +17,8 @@ public class CustomerOrder extends Order {
         order = new HashMap<>();
     }
 
+    @Override
+    public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
+        return v.visit(context, this);
+    }
 }

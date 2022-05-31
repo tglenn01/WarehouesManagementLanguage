@@ -1,13 +1,14 @@
 package src;
 
-import src.data.LoadWarehouse;
-import src.data.StoreWarehouse;
+import exceptions.ProductNotValidOnShelfException;
+import org.json.simple.parser.ParseException;
+import src.model.InventoryManager;
+
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) {
-        LoadWarehouse.loadWarehouse();
 
-
-        StoreWarehouse.storeWarehouse();
+    public static void main(String[] args) throws IOException, ProductNotValidOnShelfException, ParseException {
+        InventoryManager.execute();
     }
 }
