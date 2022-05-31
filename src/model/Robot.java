@@ -5,8 +5,8 @@ import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
 import src.ast.arugments.locations.Location;
 import src.ast.arugments.locations.Shelf;
-import src.ast.orders.CustomerOrder;
-import src.ast.orders.FulfilledOrder;
+import src.ast.arugments.orders.CustomerOrder;
+import src.ast.arugments.orders.FulfilledOrder;
 
 import java.util.HashMap;
 import java.util.Map;

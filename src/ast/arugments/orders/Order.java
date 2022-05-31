@@ -1,4 +1,4 @@
-package src.ast.orders;
+package src.ast.arugments.orders;
 
 import src.ast.arugments.Argument;
 import src.ast.arugments.Product;

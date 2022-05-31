@@ -2,8 +2,8 @@ package src.ast.arugments.locations;
 
 import src.ast.WarehouseRobotVisitor;
 import src.ast.arugments.Argument;
-import src.ast.orders.CustomerOrder;
-import src.ast.orders.FulfilledOrder;
+import src.ast.arugments.orders.CustomerOrder;
+import src.ast.arugments.orders.FulfilledOrder;
 
 // the front of house where all orders are fulfilled
 public class FrontHouse extends Argument implements Location {
