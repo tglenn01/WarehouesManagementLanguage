@@ -23,4 +23,6 @@ public interface WarehouseRobotVisitor<C,T> {
     T visit(C context, FrontHouse frontHouseNode);
     T visit(C context, CustomerOrder customerOrderNode);
     T visit(C context, FulfilledOrder fulfilledOrderNode);
+    T visit(C context, Program programNode);
+    T visit(C context, Num numberNode);
 }

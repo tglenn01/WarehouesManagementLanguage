@@ -1,6 +1,6 @@
 package src.ast;
 
-public class PickUp extends Node {
+public class PickUp extends Statement {
     public Product product;
     public Integer amount;
 

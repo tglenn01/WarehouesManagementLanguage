@@ -2,6 +2,7 @@ package src.ast.evaluators;
 
 import exceptions.*;
 import src.ast.*;
+import src.ast.Num;
 import src.ast.conditionals.If;
 import src.ast.conditionals.IfNot;
 import src.ast.locations.FrontHouse;
@@ -156,5 +157,18 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
     @Override
     public Integer visit(StringBuilder context, FulfilledOrder fulfilledOrderNode) {
         return null;
+    }
+
+    @Override
+    public Integer visit(StringBuilder context, Program programNode) {
+        for (Statement statement : programNode.getStatements()) {
+            statement.accept(context, this);
+        }
+        return null;
+    }
+
+    @Override
+    public Integer visit(StringBuilder context, Num numberNode) {
+        return numberNode.number;
     }
 }

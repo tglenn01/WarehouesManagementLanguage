@@ -8,7 +8,7 @@ import src.model.Warehouse;
 import java.util.Objects;
 
 // An item that has a name and assigned shelf
-public class Product extends Node {
+public class Product extends Argument {
 
     private String name;
     private Integer shelfLocation;

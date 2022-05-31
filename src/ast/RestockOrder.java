@@ -2,7 +2,7 @@ package src.ast;
 
 import src.ast.locations.Shelf;
 
-public class RestockOrder extends Node {
+public class RestockOrder extends Statement {
     public Shelf shelf;
     public Product product;
     public Integer amount;

@@ -1,9 +1,10 @@
 package src.ast.conditionals;
 
-import src.ast.Node;
+import src.ast.Call;
+import src.ast.Statement;
 import src.ast.WarehouseRobotVisitor;
 
-public class IfNot extends Node implements Conditional {
+public class IfNot extends Call implements Conditional {
     @Override
     public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
         return v.visit(context, this);

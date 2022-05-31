@@ -2,7 +2,7 @@ package src.ast;
 
 import src.ast.locations.Location;
 
-public class GoTo extends Node {
+public class GoTo extends Statement {
     public Location location;
 
     public GoTo(Location location) {

@@ -1,12 +1,12 @@
 package src.ast.locations;
 
-import src.ast.Node;
+import src.ast.Argument;
 import src.ast.WarehouseRobotVisitor;
 import src.ast.orders.CustomerOrder;
 import src.ast.orders.FulfilledOrder;
 
 // the front of house where all orders are fulfilled
-public class FrontHouse extends Node implements Location {
+public class FrontHouse extends Argument implements Location {
     private static FrontHouse frontHouse;
 
     private FrontHouse() {}

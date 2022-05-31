@@ -2,14 +2,14 @@ package src.ast.locations;
 
 import exceptions.InsufficientProductsException;
 import exceptions.ProductNotValidOnShelfException;
-import src.ast.Node;
+import src.ast.Argument;
 import src.ast.Product;
 import src.ast.WarehouseRobotVisitor;
 
 import java.util.*;
 
 // A shelf with an amount of products that are stored there
-public class Shelf extends Node implements Location {
+public class Shelf extends Argument implements Location {
     // TODO: implement a max quantity of products in a shelf
     // public final static int MAX_QUANTITY_OF_PRODUCTS_IN_SHELF = 10;
 
@@ -145,6 +145,15 @@ public class Shelf extends Node implements Location {
         return validProducts.contains(product);
     }
 
+    public boolean isProductValidGivenName(String name) {
+        for (Product product : validProducts) {
+            if (product.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean hasEnoughProduct(Product product, Integer amountNeeded) throws ProductNotValidOnShelfException {
         if (!validProducts.contains(product)) {
             throw new ProductNotValidOnShelfException(product, this.warehouseLocation);
@@ -173,7 +182,7 @@ public class Shelf extends Node implements Location {
         return "Shelf: " + warehouseLocation;
     }
 
-    public Map<Product, Integer> getProductData() {
+    public Map<Product, Integer> getInventoryData() {
         return new HashMap<>(inventory);
     }
 

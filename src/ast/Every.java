@@ -1,6 +1,6 @@
 package src.ast;
 
-public class Every extends Node {
+public class Every extends Statement {
     @Override
     public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
         return v.visit(context, this);

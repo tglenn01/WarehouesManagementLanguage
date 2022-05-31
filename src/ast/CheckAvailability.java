@@ -1,6 +1,8 @@
 package src.ast;
 
-public class CheckAvailability extends Node {
+import src.Expression;
+
+public class CheckAvailability extends Expression {
     public Product product;
     public Integer amount;
 

@@ -1,12 +1,13 @@
 package src.ast.orders;
 
+import src.ast.Argument;
 import src.ast.Node;
 import src.ast.Product;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Order extends Node {
+public abstract class Order extends Argument {
     protected Map<Product, Integer> order;
 
     // Adds product to order with given amount

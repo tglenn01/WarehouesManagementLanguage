@@ -2,7 +2,7 @@ package src.ast;
 
 import src.ast.orders.CustomerOrder;
 
-public class Fulfill extends Node {
+public class Fulfill extends Statement {
     public CustomerOrder customerOrder;
 
     public Fulfill(CustomerOrder customerOrder) {

@@ -1,6 +1,6 @@
 package src.ast;
 
-public class DropOff extends Node {
+public class DropOff extends Statement {
     public Product product;
 
     public DropOff(Product product) {

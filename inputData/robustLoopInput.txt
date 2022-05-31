@@ -1,9 +1,9 @@
-create order customerOrder with 5 Apple, 2 Banana;
+create order customerOrder1 with 5 Apple, 2 Banana;
 
-ifNot checkAvailability with customerOrder {
+ifNot check availability with customerOrder1 {
 
-create newProducts;
-restockOrder newProducts with CustomerOrder;
+create products newProducts;
+restock newProducts with customerOrder1;
 
 every product in newProducts {
 goTo product;
