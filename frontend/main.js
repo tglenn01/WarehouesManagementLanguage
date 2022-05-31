@@ -2,6 +2,7 @@ const consoleInput = document.querySelector(".console-input");
 const historyContainer = document.querySelector(".console-history");
 let input_number = 0;
 
+// TODO The local save file function has security issues so it might not work on every brower
 document.getElementById('file').onchange = function(){
     var file = this.files[0];
     var reader = new FileReader();
