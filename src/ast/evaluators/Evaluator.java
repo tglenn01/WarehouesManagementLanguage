@@ -36,6 +36,18 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
     private final Map<String, Inventory> inventoryVarMap = new HashMap<>();
 
     @Override
+    public Integer visit(StringBuilder context, Program programNode) {
+        for (Statement statement : programNode.getStatements()) {
+            statement.accept(context, this);
+        }
+        return null;
+    }
+
+    /**
+     *  STRUCTURES
+     */
+
+    @Override
     public Integer visit(StringBuilder context, If ifNode) {
         return null;
     }
@@ -44,6 +56,58 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
     public Integer visit(StringBuilder context, IfNot ifNotNode) {
         return null;
     }
+
+    @Override
+    public Integer visit(StringBuilder context, Every everyNode) {
+        return null;
+    }
+
+    /**
+     *  CALLS
+     */
+
+    @Override
+    public Integer visit(StringBuilder context, CreateOrder createOrderNode) {
+        String orderName = createOrderNode.orderName;
+        Inventory orderRequest = createOrderNode.orderRequest;
+        CustomerOrder newOrder = new CustomerOrder(orderRequest);
+
+        if (orderMap.containsKey(orderName)) {
+            context.append("An order is already defined with the name ")
+                    .append(orderName)
+                    .append(" the old order will be overwritten which contained ")
+                    .append(orderMap.get(orderName).getOrderData().keySet());
+        }
+
+        orderMap.put(orderName, newOrder);
+        context.append("Created new order ")
+                .append(orderName)
+                .append(" with inventory ")
+                .append(orderRequest.keySet());
+
+        return null;
+    }
+
+    @Override
+    public Integer visit(StringBuilder context, CreateProducts createProductsNode) {
+        String productsName = createProductsNode.productsName;
+
+        if (inventoryVarMap.containsKey(productsName)) {
+            context.append("An inventory is already defined with the name ")
+                    .append(productsName)
+                    .append(" the old inventory will be overwritten which contained ")
+                    .append(inventoryVarMap.get(productsName).keySet());
+        }
+
+        inventoryVarMap.put(productsName, new Inventory());
+        context.append("Created new product inventory ").append(productsName);
+
+        return null;
+    }
+
+    /**
+     *  STATEMENTS
+     */
 
     @Override
     public Integer visit(StringBuilder context, GoTo goToNode) {
@@ -104,45 +168,6 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
     }
 
     @Override
-    public Integer visit(StringBuilder context, CreateOrder createOrderNode) {
-        String orderName = createOrderNode.orderName;
-        Inventory orderRequest = createOrderNode.orderRequest;
-        CustomerOrder newOrder = new CustomerOrder(orderRequest);
-
-        if (orderMap.containsKey(orderName)) {
-            context.append("An order is already defined with the name ")
-                    .append(orderName)
-                    .append(" the old order will be overwritten which contained ")
-                    .append(orderMap.get(orderName).getOrderData().keySet());
-        }
-
-        orderMap.put(orderName, newOrder);
-        context.append("Created new order ")
-                .append(orderName)
-                .append(" with inventory ")
-                .append(orderRequest.keySet());
-
-        return null;
-    }
-
-    @Override
-    public Integer visit(StringBuilder context, CreateProducts createProductsNode) {
-        String productsName = createProductsNode.productsName;
-
-        if (inventoryVarMap.containsKey(productsName)) {
-            context.append("An inventory is already defined with the name ")
-                    .append(productsName)
-                    .append(" the old inventory will be overwritten which contained ")
-                    .append(inventoryVarMap.get(productsName).keySet());
-        }
-
-        inventoryVarMap.put(productsName, new Inventory());
-        context.append("Created new product inventory ").append(productsName);
-
-        return null;
-    }
-
-    @Override
     public Integer visit(StringBuilder context, Fulfill fulfillNode) {
         CustomerOrder customerOrder = fulfillNode.customerOrder;
 
@@ -156,14 +181,11 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
         return null;
     }
 
-    @Override
-    public Integer visit(StringBuilder context, Every everyNode) {
-        return null;
-    }
-
+    /**
+     *  EXPRESSIONS:    return 1 == true / return 0 == false
+     */
 
     @Override
-    // 1 = true; 0 = false;
     public Integer visit(StringBuilder context, CheckAvailability checkAvailabilityNode) {
         Product product = checkAvailabilityNode.product;
         Integer amount = checkAvailabilityNode.amount;
@@ -184,6 +206,10 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
         return 0;
     }
+
+    /**
+     *  ARGUMENTS
+     */
 
     @Override
     public Integer visit(StringBuilder context, Product productNode) {
@@ -207,14 +233,6 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
     @Override
     public Integer visit(StringBuilder context, FulfilledOrder fulfilledOrderNode) {
-        return null;
-    }
-
-    @Override
-    public Integer visit(StringBuilder context, Program programNode) {
-        for (Statement statement : programNode.getStatements()) {
-            statement.accept(context, this);
-        }
         return null;
     }
 

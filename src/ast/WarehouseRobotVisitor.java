@@ -37,7 +37,7 @@ public interface WarehouseRobotVisitor<C,T> {
     // expressions
     T visit(C context, CheckAvailability checkAvailabilityNode);
 
-    //
+    // arguments
     T visit(C context, Shelf shelfNode);
     T visit(C context, FrontHouse frontHouseNode);
     T visit(C context, CustomerOrder customerOrderNode);
