@@ -2,11 +2,7 @@ package src;
 
 import exceptions.ProductNotValidOnShelfException;
 import org.json.simple.parser.ParseException;
-import src.ast.Product;
-import src.ast.locations.Shelf;
-import src.data.LoadWarehouse;
-import src.data.StoreWarehouse;
-import src.model.*;
+import src.model.InventoryManager;
 
 import java.io.IOException;
 

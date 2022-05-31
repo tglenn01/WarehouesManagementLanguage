@@ -1,7 +1,6 @@
 package src.model;
 
 import exceptions.ProductNotValidOnShelfException;
-import org.antlr.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
@@ -17,9 +16,7 @@ import src.parser.ParseTreeToAST;
 import src.parser.WarehouseRobotLexer;
 import src.parser.WarehouseRobotParser;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Random;
 
 public class InventoryManager {

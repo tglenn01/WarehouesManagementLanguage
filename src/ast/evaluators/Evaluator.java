@@ -1,8 +1,10 @@
 package src.ast.evaluators;
 
-import exceptions.*;
+import exceptions.InvalidLocationException;
+import exceptions.NotFrontOfHouseException;
+import exceptions.ProductNotValidOnShelfException;
+import exceptions.RobotDoesNotHaveException;
 import src.ast.*;
-import src.ast.Num;
 import src.ast.conditionals.If;
 import src.ast.conditionals.IfNot;
 import src.ast.locations.FrontHouse;
