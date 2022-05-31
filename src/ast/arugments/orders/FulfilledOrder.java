@@ -2,13 +2,14 @@ package src.ast.arugments.orders;
 
 import src.ast.WarehouseRobotVisitor;
 import src.ast.arugments.Product;
+import src.model.Inventory;
 
 import java.util.Map;
 
 // A fulfilled order that is deposited at the front of house
 public class FulfilledOrder extends Order {
 
-    public FulfilledOrder(Map<Product, Integer> fulfilledProducts) {
+    public FulfilledOrder(Inventory fulfilledProducts) {
         order = fulfilledProducts;
     }
 

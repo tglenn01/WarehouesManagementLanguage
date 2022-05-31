@@ -5,6 +5,7 @@ import exceptions.ProductNotValidOnShelfException;
 import src.ast.WarehouseRobotVisitor;
 import src.ast.arugments.Argument;
 import src.ast.arugments.Product;
+import src.model.Inventory;
 
 import java.util.*;
 
@@ -13,17 +14,17 @@ public class Shelf extends Argument implements Location {
     // TODO: implement a max quantity of products in a shelf
     // public final static int MAX_QUANTITY_OF_PRODUCTS_IN_SHELF = 10;
 
-    private Map<Product, Integer> inventory;
+    private Inventory inventory;
     private List<Product> validProducts;
     private int warehouseLocation;
 
-    public Shelf(Integer warehouseLocation, Map<Product, Integer> inventory, List<Product> validProducts) {
+    public Shelf(Integer warehouseLocation, Inventory inventory, List<Product> validProducts) {
         this.warehouseLocation = warehouseLocation;
         this.inventory = inventory;
         this.validProducts = validProducts;
     }
 
-    public Shelf(Integer warehouseLocation, Map<Product, Integer> inventory) {
+    public Shelf(Integer warehouseLocation, Inventory inventory) {
         this.warehouseLocation = warehouseLocation;
         this.inventory = inventory;
         this.validProducts = new ArrayList<>();
@@ -31,13 +32,13 @@ public class Shelf extends Argument implements Location {
 
     public Shelf(Integer warehouseLocation, List<Product> validProducts) {
         this.warehouseLocation = warehouseLocation;
-        this.inventory = new HashMap<>();
+        this.inventory = new Inventory();
         this.validProducts = validProducts;
     }
 
     public Shelf(Integer warehouseLocation) {
         this.warehouseLocation = warehouseLocation;
-        this.inventory = new HashMap<>();
+        this.inventory = new Inventory();
         this.validProducts = new ArrayList<>();
     }
 
@@ -79,7 +80,7 @@ public class Shelf extends Argument implements Location {
      * @return returns the map with the product and the amount given
      *
      */
-    public Map<Product, Integer> pickUpProduct(Product product, Integer amount) throws InsufficientProductsException, ProductNotValidOnShelfException {
+    public Inventory pickUpProduct(Product product, Integer amount) throws InsufficientProductsException, ProductNotValidOnShelfException {
         if (!validProducts.contains(product)) {
             throw new ProductNotValidOnShelfException(product, this.warehouseLocation);
         }
@@ -97,7 +98,7 @@ public class Shelf extends Argument implements Location {
             inventory.put(product, newAmountOfProduct);
         }
 
-        Map<Product, Integer> returnVal = new HashMap<>();
+        Inventory returnVal = new Inventory();
         returnVal.put(product, amount);
 
         return returnVal;
@@ -182,8 +183,8 @@ public class Shelf extends Argument implements Location {
         return "Shelf: " + warehouseLocation;
     }
 
-    public Map<Product, Integer> getInventoryData() {
-        return new HashMap<>(inventory);
+    public Inventory getInventoryData() {
+        return new Inventory(inventory);
     }
 
     public List<Product> getValidProductData() {

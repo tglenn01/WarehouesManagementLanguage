@@ -1,7 +1,7 @@
 parser grammar WarehouseRobotParser;
 options { tokenVocab=WarehouseRobotLexer; }
 
-program:           (argument | call | structure | statement | expression)* ;
+program:           (runnable_nodes)* ;
 
 // lines of codes that run themselves, aka not arugments and expresssions, aka methods
 runnable_nodes:    call | structure | statement ;

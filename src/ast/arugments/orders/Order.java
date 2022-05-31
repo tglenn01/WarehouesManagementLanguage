@@ -2,12 +2,13 @@ package src.ast.arugments.orders;
 
 import src.ast.arugments.Argument;
 import src.ast.arugments.Product;
+import src.model.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Order extends Argument {
-    protected Map<Product, Integer> order;
+    protected Inventory order;
 
     // Adds product to order with given amount
     public void add(Product product, Integer amount) {
@@ -22,7 +23,7 @@ public abstract class Order extends Argument {
         order.put(product, amountToAdd);
     }
 
-    public Map<Product, Integer> getOrderData() {
-        return new HashMap<>(order);
+    public Inventory getOrderData() {
+        return new Inventory(order);
     }
 }

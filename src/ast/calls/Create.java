@@ -5,12 +5,6 @@ package src.ast.calls;
 
 import src.ast.WarehouseRobotVisitor;
 
-public class Create extends Call {
+public abstract class Create extends Call {
 
-
-
-    @Override
-    public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
-        return v.visit(context, this);
-    }
 }

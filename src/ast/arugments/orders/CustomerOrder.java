@@ -2,6 +2,7 @@ package src.ast.arugments.orders;
 
 import src.ast.WarehouseRobotVisitor;
 import src.ast.arugments.Product;
+import src.model.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,12 +10,12 @@ import java.util.Map;
 // A Customer Order with a number of products and how much they need of each
 public class CustomerOrder extends Order {
 
-    public CustomerOrder(Map<Product, Integer> requestedProducts) {
+    public CustomerOrder(Inventory requestedProducts) {
         order = requestedProducts;
     }
 
     public CustomerOrder() {
-        order = new HashMap<>();
+        order = new Inventory();
     }
 
     @Override

@@ -13,11 +13,11 @@ import java.util.Map;
 
 public class Robot {
     private Location currentLocation;
-    private Map<Product, Integer> currentInventory;
+    private Inventory currentInventory;
 
     public Robot() {
         currentLocation = FrontHouse.getInstance();
-        currentInventory = new HashMap<>();
+        currentInventory = new Inventory();
     }
 
     /**
@@ -39,7 +39,7 @@ public class Robot {
             throw new ProductNotValidOnShelfException(product, shelf.getWarehouseLocation());
         }
 
-        Map<Product, Integer> pickedUpProductMap;
+        Inventory pickedUpProductMap;
 
         pickedUpProductMap = pickUpProductFromShelf(context, product, amount, shelf);
         storeProductsOnRobot(product, pickedUpProductMap);
@@ -62,8 +62,8 @@ public class Robot {
         }
     }
 
-    private Map<Product, Integer> pickUpProductFromShelf(StringBuilder context, Product product, Integer amount, Shelf shelf) throws ProductNotValidOnShelfException {
-        Map<Product, Integer> pickedUpProductMap;
+    private Inventory pickUpProductFromShelf(StringBuilder context, Product product, Integer amount, Shelf shelf) throws ProductNotValidOnShelfException {
+        Inventory pickedUpProductMap;
         try {
             pickedUpProductMap = shelf.pickUpProduct(product, amount);
         } catch (InsufficientProductsException e) {
@@ -137,7 +137,7 @@ public class Robot {
         }
 
 
-        Map<Product, Integer> fulfillInventory = new HashMap<>();
+        Inventory fulfillInventory = new Inventory();
 
         for (Map.Entry<Product, Integer> entry : order.getOrderData().entrySet()) {
             Product productNeeded = entry.getKey();

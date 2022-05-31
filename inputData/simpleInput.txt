@@ -2,8 +2,8 @@ create order customerOrder1 with 3 Grape;
 
 create products returnProducts;
 
-goTo Grape;
-pickup Grape to products returnProducts;
+goTo Coffee;
+pickup Coffee to products returnProducts;
 
 goTo fronthouse;
 fulfill customerOrder1 with products returnProducts;
