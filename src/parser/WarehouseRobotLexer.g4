@@ -38,7 +38,10 @@ RIGHT_BRACE:         '}';
 SEMICOLON:          ';';
 COMMA:               ',';
 
-PRODUCT: 'Pear' | 'Orange' | 'Watermelon' | 'Grape' | 'Peanut' | 'Apple' | 'Banana';
+PRODUCT: 'Apple' | 'Banana' | 'Pear' | 'Grape' | 'Pomegranete' | 'Watermelon' | 'Cherry' |
+         'Peach' | 'Milk' | 'Egg' | 'Pork' | 'Beef' | 'Chicken' | 'Granola' | 'Tea' |
+         'Coffee' | 'Pizza' | 'Soda' | 'Carror' | 'Pepper' | 'Water' | 'Bagel' | 'Bread' |
+         'Cheese' | 'Fries' | 'Lemon' | 'Orange' ;
 NUM: [0-9]+;
 
 WHITE_SPACE:         [ \t]+ -> skip;
