@@ -30,6 +30,8 @@ IN_PRODUCTS:          'in products' -> mode(PRODUCTS_MODE);
 TO_ORDER:             'to order' -> mode(ORDER_MODE);
 TO_PRODUCTS:          'to products' -> mode(PRODUCTS_MODE);
 
+FROM_PRODUCTS:        'from products' -> mode(PRODUCTS_MODE);
+
 WITH:                 'with';
 OF:                   'of' ;
 
@@ -61,6 +63,7 @@ mode PRODUCTS_MODE;
 
 PRODUCTS_PRODUCT:     PRODUCT -> mode(DEFAULT_MODE);
 RETURN_PRODUCTS:      [a-zA-Z_]+ -> mode(DEFAULT_MODE);
+NUM_PRODUCTS:         [0-9]+;
 PRODUCTS_WHITE_SPACE: [ \t]+ -> skip;
 
 mode VARIABLE_MODE;
@@ -68,6 +71,7 @@ mode VARIABLE_MODE;
 VARIABLE_PRODUCT:     PRODUCT -> mode(DEFAULT_MODE);
 VARIABLE_FRONTHOUSE:  FRONTHOUSE -> mode(DEFAULT_MODE);
 VARIABLE_NAME:        [a-zA-Z_]+ -> mode(DEFAULT_MODE);
+NUM_VARIABLE:         [0-9]+;
 VARIABLE_WHITE_SPACE: [ \t]+ -> skip;
 
 

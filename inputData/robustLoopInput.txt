@@ -7,7 +7,7 @@ restock newProducts with order customerOrder1;
 
 every product in products newProducts {
 goTo product;
-dropoff product;
+dropoff product from products newProducts;
 }
 }
 
@@ -15,7 +15,7 @@ create products returnProducts;
 
 every product in order customOrder1 {
 goTo product;
-pickup product to products returnProduct;
+pickup 7 product to products returnProduct;
 }
 
 goTo fronthouse;

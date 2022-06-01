@@ -2,6 +2,7 @@ package src.model;
 
 import exceptions.InvalidLocationException;
 import exceptions.ProductNotValidOnShelfException;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.Shelf;
 
@@ -29,7 +30,7 @@ public class Warehouse {
      * @return true if available else false
      * @throws ProductNotValidOnShelfException: if the product we are asking for could not be found
      */
-    public boolean checkAvailability(Product product, Integer amount) throws ProductNotValidOnShelfException {
+    public boolean checkAvailability(Product product, Num amount) throws ProductNotValidOnShelfException {
         int shelfLocation = product.getProductShelfLocation();
         Shelf shelf = shelves.get(shelfLocation);
 

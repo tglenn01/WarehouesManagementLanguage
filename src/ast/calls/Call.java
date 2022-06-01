@@ -1,6 +1,6 @@
 package src.ast.calls;
 
-import src.ast.Node;
+import src.ast.RunnableNode;
 
-public abstract class Call extends Node {
+public abstract class Call extends RunnableNode {
 }

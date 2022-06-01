@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
 import org.json.simple.parser.ParseException;
 import src.ast.Program;
+import src.ast.arugments.Name;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.Shelf;
 import src.ast.evaluators.Evaluator;
@@ -92,9 +94,13 @@ public class InventoryManager {
 
         for (int i = 1; i <= 25; i++) {
             Shelf shelf = warehouse.getShelfAtLocation(i);
-            Product newProduct = new Product(productMasterList[i], i);
+            Product newProduct = new Product(new Name(productMasterList[i]), i);
             shelf.addProductToShelf(newProduct);
-            shelf.restockProduct(newProduct, random.nextInt(max - min) + min);
+            shelf.restockProduct(newProduct, new Num(random.nextInt(max - min) + min));
         }
+    }
+
+    public static Warehouse getWarehouse() {
+        return warehouse;
     }
 }

@@ -1,17 +1,16 @@
 package src.ast;
 
-import src.ast.statements.Statement;
-
 import java.util.List;
 
 public class Program extends Node {
-    private final List<Statement> statements;
+    private final List<RunnableNode> statements;
 
-    public Program(List<Statement> statements) {
+    public Program(List<RunnableNode> statements) {
         this.statements = statements;
+        this.nodeTitle = "Program";
     }
 
-    public List<Statement> getStatements() {
+    public List<RunnableNode> getRunnableNodes() {
         return statements;
     }
 

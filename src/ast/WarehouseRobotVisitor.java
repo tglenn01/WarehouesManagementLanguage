@@ -1,5 +1,6 @@
 package src.ast;
 
+import src.ast.arugments.Name;
 import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
@@ -33,6 +34,7 @@ public interface WarehouseRobotVisitor<C,T> {
     T visit(C context, DropOff dropOffNode);
     T visit(C context, RestockOrder restockOrderNode);
     T visit(C context, Fulfill fulfillNode);
+    T visit(C context, Add addNode);
 
     // expressions
     T visit(C context, CheckAvailability checkAvailabilityNode);
@@ -44,4 +46,5 @@ public interface WarehouseRobotVisitor<C,T> {
     T visit(C context, FulfilledOrder fulfilledOrderNode);
     T visit(C context, Product productNode);
     T visit(C context, Num numberNode);
+    T visit(C context, Name nameNode);
 }

@@ -30,8 +30,8 @@ if_not:            IF_NOT expression LEFT_BRACE (runnable_nodes)* RIGHT_BRACE ;
 
 // statements
 goto:              GOTO (VARIABLE_PRODUCT | VARIABLE_FRONTHOUSE | variable_varname) SEMICOLON ;
-pickup:            PICKUP (VARIABLE_PRODUCT | variable_varname) TO_PRODUCTS products_varname SEMICOLON ;
-dropoff:           DROPOFF (VARIABLE_PRODUCT | variable_varname) SEMICOLON ;
+pickup:            PICKUP NUM_VARIABLE (VARIABLE_PRODUCT | variable_varname) TO_PRODUCTS products_varname SEMICOLON ;
+dropoff:           DROPOFF (VARIABLE_PRODUCT | variable_varname) FROM_PRODUCTS products_varname SEMICOLON ;
 restock_order:     RESTOCK (PRODUCTS_PRODUCT | products_varname) WITH_ORDER order_varname SEMICOLON;
 fulfill:           FULFILL order_varname WITH_PRODUCTS products_varname SEMICOLON ;
 add:               ADD NUM PRODUCT TO_ORDER order_varname SEMICOLON ;

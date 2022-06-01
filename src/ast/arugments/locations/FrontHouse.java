@@ -9,7 +9,9 @@ import src.ast.arugments.orders.FulfilledOrder;
 public class FrontHouse extends Argument implements Location {
     private static FrontHouse frontHouse;
 
-    private FrontHouse() {}
+    private FrontHouse() {
+        this.nodeTitle = "Front House";
+    }
 
     public static FrontHouse getInstance() {
         if (frontHouse == null) {

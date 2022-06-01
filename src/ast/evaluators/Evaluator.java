@@ -1,11 +1,11 @@
 package src.ast.evaluators;
 
-import exceptions.InvalidLocationException;
-import exceptions.NotFrontOfHouseException;
-import exceptions.ProductNotValidOnShelfException;
-import exceptions.RobotDoesNotHaveException;
+import exceptions.*;
 import src.ast.Program;
+import src.ast.RunnableNode;
 import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Argument;
+import src.ast.arugments.Name;
 import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
@@ -14,6 +14,7 @@ import src.ast.arugments.locations.Shelf;
 import src.ast.arugments.orders.Order;
 import src.ast.calls.CreateOrder;
 import src.ast.calls.CreateProducts;
+import src.ast.expressions.Expression;
 import src.ast.structures.conditionals.If;
 import src.ast.structures.conditionals.IfNot;
 import src.ast.expressions.CheckAvailability;
@@ -21,23 +22,20 @@ import src.ast.arugments.orders.CustomerOrder;
 import src.ast.arugments.orders.FulfilledOrder;
 import src.ast.statements.*;
 import src.ast.structures.Every;
-import src.model.Inventory;
-import src.model.InventoryManager;
-import src.model.Robot;
-import src.model.Warehouse;
+import src.model.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> {
     private final Robot robot = InventoryManager.robot;
     private final Warehouse warehouse = InventoryManager.warehouse;
-    private final Map<String, Order> orderMap = new HashMap<>();
-    private final Map<String, Inventory> inventoryVarMap = new HashMap<>();
+    private final Map<Name, Order> orderMap = new HashMap<>();
+    private final Map<Name, Inventory> inventoryVarMap = new HashMap<>();
+    // private final List<Product> productTable = new ArrayList<>();
 
     @Override
     public Integer visit(StringBuilder context, Program programNode) {
-        for (Statement statement : programNode.getStatements()) {
+        for (RunnableNode statement : programNode.getRunnableNodes()) {
             statement.accept(context, this);
         }
         return null;
@@ -49,16 +47,82 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
     @Override
     public Integer visit(StringBuilder context, If ifNode) {
+        Expression expression = ifNode.expression;
+        List<RunnableNode> runnableNodes = ifNode.runnableNodes;
+
+        // TODO: Check if this prints correctly
+        context.append("Evaluating result of expression ")
+                .append(expression.nodeTitle)
+                .append(" to check if nodes ")
+                .append(runnableNodes.stream().map(node -> node.nodeTitle))
+                .append(" will run");
+
+        if (expression.accept(context, this) == 1) {
+            for (RunnableNode node : runnableNodes) {
+                node.accept(context, this);
+            }
+        }
+
         return null;
     }
 
     @Override
     public Integer visit(StringBuilder context, IfNot ifNotNode) {
+        Expression expression = ifNotNode.expression;
+        List<RunnableNode> runnableNodes = ifNotNode.runnableNodes;
+
+        // TODO: Check if this prints correctly
+        context.append("Evaluating result of expression ")
+                .append(expression.nodeTitle)
+                .append(" if not, nodes ")
+                .append(runnableNodes.stream().map(node -> node.nodeTitle))
+                .append(" will run");
+
+        if (expression.accept(context, this) == 0) {
+            for (RunnableNode node : runnableNodes) {
+                node.accept(context, this);
+            }
+        }
+
         return null;
     }
 
     @Override
     public Integer visit(StringBuilder context, Every everyNode) {
+        /*
+            a little bit of pain happening here, will come back to at end to fix
+
+
+            String varName = everyNode.varName;
+        String iterableName = everyNode.iterableName;
+        List<RunnableNode> runnableNodes = everyNode.runnableNodes;
+
+        if (orderMap.containsKey(iterableName)) {
+            context.append("Iterating over products in order ")
+                    .append(iterableName);
+
+            Set<Product> products = orderMap.get(iterableName).getOrderData().keySet();
+
+            for (Product product : products) {
+                productTable.add(product);
+
+                for (RunnableNode node : runnableNodes) {
+                    node.accept(context, this);
+                }
+
+                productTable.remove(product);
+            }
+
+
+        } else if (inventoryVarMap.containsKey(iterableName)) {
+            context.append("Iterating over products in product inventory ")
+                    .append(iterableName);
+        } else {
+            context.append("Unable to find iterable with name ").append(iterableName);
+        }
+
+         */
+
         return null;
     }
 
@@ -68,7 +132,7 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
     @Override
     public Integer visit(StringBuilder context, CreateOrder createOrderNode) {
-        String orderName = createOrderNode.orderName;
+        Name orderName = createOrderNode.orderName;
         Inventory orderRequest = createOrderNode.orderRequest;
         CustomerOrder newOrder = new CustomerOrder(orderRequest);
 
@@ -90,7 +154,7 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
     @Override
     public Integer visit(StringBuilder context, CreateProducts createProductsNode) {
-        String productsName = createProductsNode.productsName;
+        Name productsName = createProductsNode.productsName;
 
         if (inventoryVarMap.containsKey(productsName)) {
             context.append("An inventory is already defined with the name ")
@@ -111,20 +175,40 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
     @Override
     public Integer visit(StringBuilder context, GoTo goToNode) {
-        Location location = goToNode.location;
+        Argument argument = goToNode.argument;
 
-        robot.goTo(location);
-        context.append("Robot went to new location ").append(location.getLocationName());
+        if (argument == FrontHouse.getInstance()) {
+            context.append("Robot went to the front of house");
+            robot.goTo(FrontHouse.getInstance());
+        } else if (argument.getClass() == Product.class) {
+            Product product = (Product) argument;
+            Integer shelfLocation = product.getProductShelfLocation();
+            Shelf shelf = warehouse.getShelfAtLocation(shelfLocation);
+            context.append("The robot went to shelf # ").append(shelfLocation);
+            robot.goTo(shelf);
+        } else {
+            // TODO implement with for loops
+            context.append("TODO implement loop support");
+            return null;
+        }
 
         return null;
     }
 
     @Override
     public Integer visit(StringBuilder context, PickUp pickUpNode) {
+        Argument argument = pickUpNode.argument;
+
 
         try {
-            robot.pickup(context, pickUpNode.product, pickUpNode.amount);
-        } catch (ProductNotValidOnShelfException | InvalidLocationException e) {
+            if (argument.getClass() == Product.class) {
+                robot.pickup(context, (Product) argument, pickUpNode.amount, pickUpNode.inventoryName);
+            } else {
+                // TODO implement with for loops
+                context.append("TODO implement loop support");
+                return null;
+            }
+        } catch (ProductNotValidOnShelfException | InvalidLocationException | RobotDoesNotHaveInventoryException e) {
             context.append(e.getMessage());
         }
 
@@ -133,14 +217,25 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
     @Override
     public Integer visit(StringBuilder context, DropOff dropOffNode) {
-        Product product = dropOffNode.product;
+        Name inventoryName = dropOffNode.inventoryName;
+        Argument argument = dropOffNode.argument;
+        Product product;
+
+        if (argument.getClass() == Product.class) {
+            product = (Product) argument;
+        } else {
+            // TODO for loop implementation
+            context.append("TODO implement loop support");
+            return null;
+        }
+
         try {
-            robot.dropOff(product);
+            robot.dropOff(product, inventoryName);
             context.append("Robot dropped off ")
                     .append(product.getName())
                     .append(" at ")
                     .append(robot.getRobotLocation().getLocationName());
-        } catch (InvalidLocationException | ProductNotValidOnShelfException | RobotDoesNotHaveException e) {
+        } catch (InvalidLocationException | ProductNotValidOnShelfException | RobotDoesNotHaveProductException | RobotDoesNotHaveInventoryException e) {
             context.append(e.getMessage());
         }
 
@@ -151,7 +246,7 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
     public Integer visit(StringBuilder context, RestockOrder restockOrderNode) {
         Shelf shelf = restockOrderNode.shelf;
         Product product = restockOrderNode.product;
-        Integer amount = restockOrderNode.amount;
+        Num amount = restockOrderNode.amount;
 
         try {
             shelf.restockProduct(product, amount);
@@ -173,9 +268,31 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
         try {
             // TODO Come back and make sure this works
-            context.append(robot.fulfill(customerOrder));
-        } catch (NotFrontOfHouseException e) {
+            context.append(robot.fulfill(customerOrder, fulfillNode.inventoryName));
+        } catch (NotFrontOfHouseException | RobotDoesNotHaveInventoryException e) {
             context.append(e.getMessage());
+        }
+
+        return null;
+    }
+
+    @Override
+    public Integer visit(StringBuilder context, Add addNode) {
+        Num amount = addNode.amount;
+        Product product = addNode.product;
+        Name inventoryName = addNode.inventoryName;
+
+        if (orderMap.containsKey(inventoryName)) {
+            context.append("Adding ")
+                    .append(amount)
+                    .append(" ")
+                    .append(product.getName())
+                    .append(" to order ")
+                    .append(inventoryName);
+
+            orderMap.get(inventoryName).add(product, amount);
+        } else {
+            context.append("Unable to find order with name ").append(inventoryName);
         }
 
         return null;
@@ -188,7 +305,7 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
     @Override
     public Integer visit(StringBuilder context, CheckAvailability checkAvailabilityNode) {
         Product product = checkAvailabilityNode.product;
-        Integer amount = checkAvailabilityNode.amount;
+        Num amount = checkAvailabilityNode.amount;
 
         try {
 
@@ -239,5 +356,10 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
     @Override
     public Integer visit(StringBuilder context, Num numberNode) {
         return numberNode.number;
+    }
+
+    @Override
+    public Integer visit(StringBuilder context, Name nameNode) {
+        return null;
     }
 }

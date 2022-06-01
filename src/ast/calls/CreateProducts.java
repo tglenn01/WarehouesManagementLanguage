@@ -1,13 +1,15 @@
 package src.ast.calls;
 
 import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Name;
 
 public class CreateProducts extends Create {
-    public String productsName;
+    public Name productsName;
 
 
-    public CreateProducts(String productsName) {
+    public CreateProducts(Name productsName) {
         this.productsName = productsName;
+        this.nodeTitle = "Create Products";
     }
 
     @Override

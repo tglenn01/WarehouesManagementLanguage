@@ -1,18 +1,17 @@
 package src.ast.calls;
 
 import src.ast.WarehouseRobotVisitor;
-import src.ast.arugments.Product;
+import src.ast.arugments.Name;
 import src.model.Inventory;
 
-import java.util.Map;
-
 public class CreateOrder extends Create {
-    public String orderName;
+    public Name orderName;
     public Inventory orderRequest;
 
-    public CreateOrder(String orderName, Inventory orderRequest) {
+    public CreateOrder(Name orderName, Inventory orderRequest) {
         this.orderName = orderName;
         this.orderRequest = orderRequest;
+        this.nodeTitle = "Create Order";
     }
 
     @Override

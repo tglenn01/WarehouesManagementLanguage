@@ -2,6 +2,7 @@ package src.data;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.Shelf;
 import src.model.ProductMasterList;
@@ -68,7 +69,7 @@ public class StoreWarehouse {
 
     private static void storeShelfCurrentProducts(Shelf shelf, JSONObject storedShelf) {
         JSONArray currentProductArray = new JSONArray();
-        Map<Product, Integer> products = shelf.getInventoryData();
+        Map<Product, Num> products = shelf.getInventoryData();
 
         products.forEach((product, integer) -> {
             JSONObject productObject = new JSONObject();

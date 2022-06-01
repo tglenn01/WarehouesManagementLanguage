@@ -1,9 +1,11 @@
 package src.model;
 
 import exceptions.NoSuchProductException;
+import src.ast.arugments.Name;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.Shelf;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class ProductMasterList {
@@ -36,7 +38,7 @@ public class ProductMasterList {
             "Lemon",
             "Orange"};
 
-    public static Product getProductGivenName(String name) throws NoSuchProductException {
+    public static Product getProductGivenName(Name name) throws NoSuchProductException {
         Warehouse warehouse = InventoryManager.warehouse;
         Map<Integer, Shelf> shelfData = warehouse.getShelvesData();
 
@@ -50,6 +52,10 @@ public class ProductMasterList {
             }
         }
 
-        throw new NoSuchProductException(name);
+        if (Arrays.stream(VALID_PRODUCTS).toList().contains(name.name)) {
+            return new Product(name, 0);
+        }
+
+        throw new NoSuchProductException(name.name);
     }
 }
