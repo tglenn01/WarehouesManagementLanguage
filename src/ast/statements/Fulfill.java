@@ -5,11 +5,11 @@ import src.ast.arugments.Name;
 import src.ast.arugments.orders.CustomerOrder;
 
 public class Fulfill extends Statement {
-    public CustomerOrder customerOrder;
+    public Name customerOrderName;
     public Name inventoryName;
 
-    public Fulfill(CustomerOrder customerOrder, Name inventoryName) {
-        this.customerOrder  = customerOrder;
+    public Fulfill(Name customerOrderName, Name inventoryName) {
+        this.customerOrderName  = customerOrderName;
         this.inventoryName = inventoryName;
         this.nodeTitle = "Fulfill";
     }

@@ -1,23 +1,18 @@
 create order coffeeOrder1;
-create order grapeOrder1 with 7 Grape;
+create order grapeOrder1 with 3 Grape;
 
-if check availability of 5 Coffee {
+if check availability of products 5 Coffee {
 add 5 Coffee to order coffeeOrder1;
-}
-
-every cracker in order grapeOrder1 {
-add 1 Cheese to order grapeOrder1;
-goTo cracker;
 }
 
 create products returnCoffeeProducts;
 create products returnGrapeProducts;
 
 goTo Grape;
-pickup Grape to products returnGrapeProducts;
+pickup 5 Grape to products returnGrapeProducts;
 
 goTo Coffee;
-pickup Coffee to products returnCoffeeProducts;
+pickup 5 Coffee to products returnCoffeeProducts;
 
 goTo fronthouse;
 fulfill grapeOrder1 with products returnGrapeProducts;

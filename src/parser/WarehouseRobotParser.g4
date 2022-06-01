@@ -11,7 +11,7 @@ argument:          order_varname | products_varname | variable_varname | PRODUCT
 call:              create_order | create_products ;
 structure:         loop | if | if_not ;
 statement:         goto | pickup | dropoff | restock_order | fulfill | add;
-expression:        check_availiblity ;
+expression:        check_order_availability | check_product_availability ;
 
 // arguments
 iterable:          order_varname | products_varname ;
@@ -37,4 +37,5 @@ fulfill:           FULFILL order_varname WITH_PRODUCTS products_varname SEMICOLO
 add:               ADD NUM PRODUCT TO_ORDER order_varname SEMICOLON ;
 
 // expressions
-check_availiblity: CHECK_AVAILABILTIY ((NUM_ORDER ORDER_PRODUCT) | order_varname) ;
+check_order_availability: CHECK_ORDER_AVAILABILTIY order_varname ;
+check_product_availability: CHECK_PRODUCTS_AVAILABILTIY NUM PRODUCT ;

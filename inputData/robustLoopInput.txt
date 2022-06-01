@@ -1,6 +1,6 @@
 create order customerOrder1 with 5 Apple, 2 Banana;
 
-ifNot check availability of customerOrder1 {
+ifNot check availability of order customerOrder1 {
 
 create products newProducts;
 restock newProducts with order customerOrder1;

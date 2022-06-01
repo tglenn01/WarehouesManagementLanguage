@@ -10,18 +10,21 @@ import src.ast.arugments.Name;
 import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
+import src.ast.arugments.locations.Shelf;
 import src.ast.calls.Call;
 import src.ast.calls.Create;
 import src.ast.calls.CreateOrder;
 import src.ast.calls.CreateProducts;
+import src.ast.expressions.CheckOrderAvailability;
+import src.ast.expressions.CheckProductAvailability;
 import src.ast.expressions.Expression;
-import src.ast.statements.GoTo;
-import src.ast.statements.PickUp;
-import src.ast.statements.Statement;
+import src.ast.statements.*;
+import src.ast.structures.Every;
 import src.ast.structures.Structure;
 import src.ast.structures.conditionals.If;
 import src.ast.structures.conditionals.IfNot;
 import src.model.Inventory;
+import src.model.InventoryManager;
 import src.model.ProductMasterList;
 import src.model.Warehouse;
 
@@ -112,8 +115,10 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
     @Override
     public Expression visitExpression(WarehouseRobotParser.ExpressionContext ctx) {
 
-        if (ctx.check_availiblity() != null) {
-            return visitCheck_availiblity(ctx.check_availiblity());
+        if (ctx.check_order_availability() != null) {
+            return visitCheck_order_availability(ctx.check_order_availability());
+        } else if(ctx.check_product_availability() != null) {
+            return visitCheck_product_availability(ctx.check_product_availability());
         } else {
             throw new RuntimeException("Statement parse tree with invalid context information");
         }
@@ -194,8 +199,8 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitLoop(WarehouseRobotParser.LoopContext ctx) {
-        return super.visitLoop(ctx);
+    public Every visitLoop(WarehouseRobotParser.LoopContext ctx) {
+        return null;
     }
 
     @Override
@@ -215,7 +220,7 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitIf_not(WarehouseRobotParser.If_notContext ctx) {
+    public IfNot visitIf_not(WarehouseRobotParser.If_notContext ctx) {
         if (ctx.expression() == null) {
             throw new RuntimeException("Statement parse tree with invalid context information");
         }
@@ -231,7 +236,7 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitGoto(WarehouseRobotParser.GotoContext ctx) {
+    public GoTo visitGoto(WarehouseRobotParser.GotoContext ctx) {
         if (ctx.VARIABLE_PRODUCT() != null) {
 
             try {
@@ -253,11 +258,13 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
 
         } else if (ctx.variable_varname() != null) {
             return new GoTo(new Name(ctx.variable_varname().VARIABLE_NAME().getText()));
+        } else {
+            throw new RuntimeException("Statement parse tree with invalid context information");
         }
     }
 
     @Override
-    public Node visitPickup(WarehouseRobotParser.PickupContext ctx) {
+    public PickUp visitPickup(WarehouseRobotParser.PickupContext ctx) {
         Num amount = new Num(Integer.parseInt(ctx.NUM_VARIABLE().getText()));
         Name inventoryName = new Name(ctx.products_varname().getText());
 
@@ -278,11 +285,10 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
 
             } catch (NoSuchProductException e) {
 
-                throw new RuntimeException("Attempting to reach a product that does not exist");
+                throw new RuntimeException(e.getMessage());
 
             }
         } else if (ctx.variable_varname() != null) {
-
             return new PickUp(new Name (ctx.variable_varname().VARIABLE_NAME().getText()), amount, inventoryName);
         } else {
             throw new RuntimeException("Statement parse tree with invalid context information");
@@ -290,32 +296,97 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitDropoff(WarehouseRobotParser.DropoffContext ctx) {
+    public DropOff visitDropoff(WarehouseRobotParser.DropoffContext ctx) {
+        Name inventoryName = new Name(ctx.products_varname().getText());
 
         if (ctx.VARIABLE_PRODUCT() != null) {
+            try {
+                Product product = ProductMasterList.getProductGivenName(new Name(ctx.VARIABLE_PRODUCT().getText()));
+                return new DropOff(product, inventoryName);
+            } catch (NoSuchProductException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        } else if (ctx.variable_varname() != null) {
+            Name variableName = new Name(ctx.variable_varname().VARIABLE_NAME().getText());
 
-        } else if (ctx.variable_varname() != null)
-
-        return super.visitDropoff(ctx);
+            return new DropOff(variableName, inventoryName);
+        } else {
+            throw new RuntimeException("Statement parse tree with invalid context information");
+        }
     }
 
     @Override
-    public Node visitRestock_order(WarehouseRobotParser.Restock_orderContext ctx) {
-        return super.visitRestock_order(ctx);
+    public RestockOrder visitRestock_order(WarehouseRobotParser.Restock_orderContext ctx) {
+
+        // doing this wrong
+
+        Num num = new Num(RestockOrder.NUM_RESTOCK);
+
+        if (ctx.PRODUCTS_PRODUCT() != null) {
+            try {
+                Product product = ProductMasterList.getProductGivenName(new Name(ctx.PRODUCTS_PRODUCT().getText()));
+
+                // check that the product is currently assigned to a shelf
+                if (product.getProductShelfLocation() == 0) {
+                    throw new RuntimeException("Attempting to restock a product that" +
+                            " is not currently assigned to a shelf");
+                }
+
+                Shelf shelf = InventoryManager.warehouse.getShelfAtLocation(product.getProductShelfLocation());
+
+                return new RestockOrder(shelf, product, num);
+
+            } catch (NoSuchProductException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        } else if (ctx.products_varname() != null) {
+            return null;
+        }
+
+
+        return null;
     }
 
     @Override
-    public Node visitFulfill(WarehouseRobotParser.FulfillContext ctx) {
-        return super.visitFulfill(ctx);
+    public Fulfill visitFulfill(WarehouseRobotParser.FulfillContext ctx) {
+        Name orderName = new Name(ctx.order_varname().CUSTOMER_ORDER().getText());
+        Name inventoryName = new Name(ctx.products_varname().RETURN_PRODUCTS().getText());
+
+        return new Fulfill(orderName, inventoryName);
     }
 
     @Override
-    public Node visitAdd(WarehouseRobotParser.AddContext ctx) {
-        return super.visitAdd(ctx);
+    public Add visitAdd(WarehouseRobotParser.AddContext ctx) {
+        try {
+            Num amount = new Num(Integer.parseInt(ctx.NUM().getText()));
+            Product product = ProductMasterList.getProductGivenName(new Name(ctx.PRODUCT().getText()));
+            Name inventoryName = new Name(ctx.order_varname().CUSTOMER_ORDER().getText());
+
+            return new Add(amount, product, inventoryName);
+
+        } catch (NoSuchProductException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
-    public Node visitCheck_availiblity(WarehouseRobotParser.Check_availiblityContext ctx) {
-        return super.visitCheck_availiblity(ctx);
+    public CheckOrderAvailability visitCheck_order_availability(WarehouseRobotParser.Check_order_availabilityContext ctx) {
+        Name name = new Name(ctx.order_varname().CUSTOMER_ORDER().getText());
+
+        return new CheckOrderAvailability(name);
     }
+
+    @Override
+    public CheckProductAvailability visitCheck_product_availability(WarehouseRobotParser.Check_product_availabilityContext ctx) {
+        try {
+            Num amount = new Num(Integer.parseInt(ctx.NUM().getText()));
+            Product product = ProductMasterList.getProductGivenName(new Name(ctx.PRODUCT().getText()));
+
+            return new CheckProductAvailability(product, amount);
+
+        } catch (NoSuchProductException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }

@@ -5,12 +5,12 @@ import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
 import src.ast.arugments.locations.Shelf;
-import src.ast.calls.Create;
 import src.ast.calls.CreateOrder;
 import src.ast.calls.CreateProducts;
+import src.ast.expressions.CheckOrderAvailability;
 import src.ast.structures.conditionals.If;
 import src.ast.structures.conditionals.IfNot;
-import src.ast.expressions.CheckAvailability;
+import src.ast.expressions.CheckProductAvailability;
 import src.ast.arugments.orders.CustomerOrder;
 import src.ast.arugments.orders.FulfilledOrder;
 import src.ast.statements.*;
@@ -37,7 +37,8 @@ public interface WarehouseRobotVisitor<C,T> {
     T visit(C context, Add addNode);
 
     // expressions
-    T visit(C context, CheckAvailability checkAvailabilityNode);
+    T visit(C context, CheckOrderAvailability checkOrderAvailabilityNode);
+    T visit(C context, CheckProductAvailability checkProductAvailabilityNode);
 
     // arguments
     T visit(C context, Shelf shelfNode);

@@ -18,7 +18,10 @@ FULFILL:              'fulfill' -> mode(ORDER_MODE);
 ADD:                  'add';
 
 // expressions
-CHECK_AVAILABILTIY:   'check availability of' -> mode(ORDER_MODE);
+
+CHECK_ORDER_AVAILABILTIY:   'check availability of order' -> mode(ORDER_MODE);
+CHECK_PRODUCTS_AVAILABILTIY:   'check availability of products';
+
 
 // individual tokens
 WITH_ORDER:           'with order' -> mode(ORDER_MODE);

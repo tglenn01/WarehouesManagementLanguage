@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import src.ast.arugments.Name;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.Shelf;
 import src.model.Warehouse;
@@ -61,7 +62,7 @@ public class LoadWarehouse {
             JSONObject shelfProduct = (JSONObject) productInShelfInventory;
 
             String productName = (String) shelfProduct.get("name");
-            Integer productQuantity = ((Long) shelfProduct.get("quantity")).intValue();
+            Num productQuantity = new Num( ((Long) shelfProduct.get("quantity")).intValue() );
 
             Product createdProduct = new Product(new Name(productName), shelfLocation);
 

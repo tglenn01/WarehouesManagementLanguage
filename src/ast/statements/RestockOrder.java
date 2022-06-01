@@ -7,16 +7,16 @@ import src.ast.arugments.Product;
 import src.ast.arugments.locations.Shelf;
 
 public class RestockOrder extends Statement {
+    public static final int NUM_RESTOCK = 10;
+
     public Shelf shelf;
     public Product product;
     public Num amount;
-    public Name inventoryName;
 
-    public RestockOrder(Shelf shelf, Product product, Num amount, Name inventoryName) {
+    public RestockOrder(Shelf shelf, Product product, Num amount) {
         this.shelf = shelf;
         this.product = product;
         this.amount = amount;
-        this.inventoryName = inventoryName;
         this.nodeTitle = "Restock";
     }
 
