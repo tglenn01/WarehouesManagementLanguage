@@ -1,20 +1,18 @@
 package src.ast.arugments.orders;
 
 import src.ast.WarehouseRobotVisitor;
-import src.ast.arugments.Product;
-
-import java.util.HashMap;
-import java.util.Map;
+import src.model.Inventory;
 
 // A Customer Order with a number of products and how much they need of each
 public class CustomerOrder extends Order {
 
-    public CustomerOrder(Map<Product, Integer> requestedProducts) {
+    public CustomerOrder(Inventory requestedProducts) {
         order = requestedProducts;
+        this.nodeTitle = "Custom Order";
     }
 
     public CustomerOrder() {
-        order = new HashMap<>();
+        order = new Inventory();
     }
 
     @Override

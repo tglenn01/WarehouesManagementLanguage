@@ -1,15 +1,21 @@
 package src.ast.statements;
 
 import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Argument;
+import src.ast.arugments.Name;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 
 public class PickUp extends Statement {
-    public Product product;
-    public Integer amount;
+    public Argument argument;
+    public Num amount;
+    public Name inventoryName;
 
-    public PickUp(Product product, Integer amount) {
-        this.product = product;
+    public PickUp(Argument argument, Num amount, Name inventoryName) {
+        this.argument = argument;
         this.amount = amount;
+        this.inventoryName = inventoryName;
+        this.nodeTitle = "Pickup";
     }
 
     @Override

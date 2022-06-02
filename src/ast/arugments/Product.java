@@ -9,14 +9,16 @@ import src.model.Warehouse;
 import java.util.Objects;
 
 // An item that has a name and assigned shelf
+// A shelfLocation of 0 means it is unassigned
 public class Product extends Argument {
 
-    private String name;
+    private final Name name;
     private Integer shelfLocation;
 
-    public Product(String name, Integer shelfLocation) {
+    public Product(Name name, Integer shelfLocation) {
         this.name = name;
         this.shelfLocation = shelfLocation;
+        this.nodeTitle = "Product";
     }
 
     /**
@@ -29,17 +31,26 @@ public class Product extends Argument {
      */
     public void updateShelfLocation(Integer newShelfLocation) {
         Warehouse warehouse = InventoryManager.warehouse;
-        Shelf oldLocation =  warehouse.getShelfAtLocation(this.shelfLocation);
-        Shelf newLocation = warehouse.getShelfAtLocation(newShelfLocation);
 
-        try {
-            oldLocation.removeProductFromShelf(this);
-        } catch (ProductNotValidOnShelfException e) {
-            // ignore since it already isn't there
+        // if we are assigned to a shelf remove it
+        if (this.shelfLocation != 0) {
+            Shelf oldLocation =  warehouse.getShelfAtLocation(this.shelfLocation);
+
+            try {
+                oldLocation.removeProductFromShelf(this);
+            } catch (ProductNotValidOnShelfException e) {
+                // ignore since it already isn't there
+            }
         }
 
+        // assign new shelf location
         this.shelfLocation = newShelfLocation;
-        newLocation.addProductToShelf(this);
+
+        // if we were assigned to a new shelf add it to the shelf
+        if (shelfLocation != 0) {
+            Shelf newLocation = warehouse.getShelfAtLocation(newShelfLocation);
+            newLocation.addProductToShelf(this);
+        }
     }
 
     // return the shelf location that the products is stored at
@@ -47,7 +58,7 @@ public class Product extends Argument {
         return shelfLocation;
     }
 
-    public String getName() {
+    public Name getName() {
         return this.name;
     }
 

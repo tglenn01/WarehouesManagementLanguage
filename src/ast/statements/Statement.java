@@ -1,6 +1,6 @@
 package src.ast.statements;
 
-import src.ast.Node;
+import src.ast.RunnableNode;
 
-public abstract class Statement extends Node {
+public abstract class Statement extends RunnableNode {
 }

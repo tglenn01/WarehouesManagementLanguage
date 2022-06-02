@@ -1,6 +1,6 @@
 package src.ast.structures;
 
-import src.ast.Node;
+import src.ast.RunnableNode;
 
-public abstract class Structure extends Node {
+public abstract class Structure extends RunnableNode {
 }
