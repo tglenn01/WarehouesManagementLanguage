@@ -1,16 +1,9 @@
 const consoleInput = document.querySelector(".console-input");
 const historyContainer = document.querySelector(".console-history");
 let input_number = 0;
+let total_string = "";
 
 // TODO The local save file function has security issues so it might not work on every brower
-document.getElementById('file').onchange = function(){
-    var file = this.files[0];
-    var reader = new FileReader();
-    reader.onload = function(progressEvent){
-      console.log(this.result);
-    };
-    reader.readAsText(file);
-  };
 
 function evaluate(inputAsString, output){
     var outputAsString;
@@ -20,9 +13,11 @@ function evaluate(inputAsString, output){
     else{
       outputAsString =
       output instanceof Array ? `[${output.join(", ")}]` : output.toString();
-      outputAsString = "Added (" + outputAsString + ") to the .txt file."
+      total_string = total_string + outputAsString + '\n';
+      outputAsString = "Added (" + outputAsString + ") to the " + document.getElementById("filename").value + ".txt file."
       input_number++;
     }
+
     const inputLogElement = document.createElement("div");
     const outputLogElement = document.createElement("div");
 
@@ -38,19 +33,45 @@ function evaluate(inputAsString, output){
 function removeLog(){
   if (confirm("Do you want to delete all the previous inputs?") == true){
     historyContainer.remove();
+    consoleInput.remove();
+    consoleInput = document.querySelector(".console-input");
+    historyContainer = document.querySelector(".console-history");
   }
   else{
     return;
   }
 }
 
+function downloadFile(filename, content){
+  alert(filename.length);
+  if (input_number == 0){
+    alert("No Robotcode command entered yet!");
+    return;
+  }
+  const blob = new Blob([content], {
+    type: 'plain/text'
+  });
+  const fileurl = URL.createObjectURL(blob);
+  const element = document.createElement("a");
+  element.setAttribute('href', fileurl);
+  element.setAttribute('download', filename);
+  element.click();
+}
+
+const download_button = document.getElementById("download");
+download_button.addEventListener("click", function(){ 
+  tmp_name = document.getElementById("filename").value;
+  if (tmp_name.length == 0) {
+    alert("No file name yet!");
+    return;
+  }
+  downloadFile(tmp_name + '.txt', total_string);
+});
+
 
 consoleInput.addEventListener("keyup", (e) => {
   const code = consoleInput.value.trim();
 
-  // if (code.length === 0) {
-  //   return;
-  // }
 
   let dynamic_mode = 0;
 
