@@ -3,6 +3,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Project 1" options="--add-modules java.base" />
+      <module name="cpsc410_project1_team7" options="--add-modules java.base" />
     </option>
   </component>
 </project>
