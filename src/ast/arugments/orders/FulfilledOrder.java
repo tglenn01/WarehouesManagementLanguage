@@ -35,11 +35,11 @@ public class FulfilledOrder extends Order {
             Num amountOfProductsFulfilled = this.order.get(product);
 
             if (amountOfProductsFulfilled.number == 0) {
-                compareResults.append("We were out of stock of ").append(product.getName());
+                compareResults.append("We were out of stock of ").append(product.getName().name).append(System.lineSeparator());
             } else if (amountOfProductsFulfilled.number < amountNeeded.number) {
-                compareResults.append("We only had ").append(amountOfProductsFulfilled).append(" Of ").append(product.getName());
+                compareResults.append("We only had ").append(amountOfProductsFulfilled.number).append(" Of ").append(product.getName().name).append(System.lineSeparator());
             } else {
-                compareResults.append("We had all of the ").append(product.getName()).append(" you requested!");
+                compareResults.append("We had all of the ").append(product.getName().name).append(" you requested!").append(System.lineSeparator());
             }
 
         }

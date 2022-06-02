@@ -1,12 +1,16 @@
 create order coffeeOrder1;
 create order grapeOrder1 with 3 Grape;
 
-if check availability of products 5 Coffee {
 add 5 Coffee to order coffeeOrder1;
-}
 
 create products returnCoffeeProducts;
 create products returnGrapeProducts;
+
+if check availability of products 3 Milk {
+add 3 Milk to order coffeeOrder1;
+goTo Milk;
+pickup 3 Milk to products returnCoffeeProducts;
+}
 
 goTo Grape;
 pickup 5 Grape to products returnGrapeProducts;

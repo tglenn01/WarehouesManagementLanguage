@@ -44,7 +44,7 @@ public class ProductMasterList {
 
         for (Shelf shelf : shelfData.values()) {
             if (shelf.isProductValidGivenName(name)) {
-                for (Product product : shelf.getInventoryData().keySet()) {
+                for (Product product : shelf.getValidProductData()) {
                     if (product.getName().equals(name)) {
                         return product;
                     }

@@ -19,6 +19,6 @@ public class Add extends Statement{
 
     @Override
     public <C, T> T accept(C context, WarehouseRobotVisitor<C, T> v) {
-        return null;
+        return v.visit(context, this);
     }
 }

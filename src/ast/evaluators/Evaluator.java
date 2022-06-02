@@ -50,18 +50,20 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
         Expression expression = ifNode.expression;
         List<RunnableNode> runnableNodes = ifNode.runnableNodes;
 
-        // TODO: Check if this prints correctly
         context.append("Evaluating result of expression ")
                 .append(expression.nodeTitle)
                 .append(" to check if nodes ")
-                .append(runnableNodes.stream().map(node -> node.nodeTitle))
+                .append(runnableNodes.stream().map(node -> node.nodeTitle).toList().toString())
                 .append(" will run")
                 .append(System.lineSeparator());
 
         if (expression.accept(context, this) == 1) {
+            context.append(expression.nodeTitle).append(" returned true").append(System.lineSeparator());
             for (RunnableNode node : runnableNodes) {
                 node.accept(context, this);
             }
+        } else {
+            context.append(expression.nodeTitle).append(" returned false").append(System.lineSeparator());
         }
 
         return null;
@@ -72,11 +74,10 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
         Expression expression = ifNotNode.expression;
         List<RunnableNode> runnableNodes = ifNotNode.runnableNodes;
 
-        // TODO: Check if this prints correctly
         context.append("Evaluating result of expression ")
                 .append(expression.nodeTitle)
                 .append(" if not, nodes ")
-                .append(runnableNodes.stream().map(node -> node.nodeTitle))
+                .append(runnableNodes.stream().map(node -> node.nodeTitle).toList().toString())
                 .append(" will run")
                 .append(System.lineSeparator());
 
@@ -275,7 +276,8 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
     @Override
     public Integer visit(StringBuilder context, Fulfill fulfillNode) {
-        CustomerOrder customerOrder = (CustomerOrder) orderMap.get(fulfillNode.customerOrderName);
+        Name orderName = fulfillNode.customerOrderName;
+        CustomerOrder customerOrder = (CustomerOrder) orderMap.get(orderName);
 
         try {
             // TODO Come back and make sure this works
@@ -295,11 +297,11 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
         if (orderMap.containsKey(inventoryName)) {
             context.append("Adding ")
-                    .append(amount)
+                    .append(amount.number)
                     .append(" ")
-                    .append(product.getName())
+                    .append(product.getName().name)
                     .append(" to order ")
-                    .append(inventoryName)
+                    .append(inventoryName.name)
                     .append(System.lineSeparator());
 
             orderMap.get(inventoryName).add(product, amount);
@@ -336,11 +338,11 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
         try {
 
             if (warehouse.checkAvailability(product, amount)) {
-                context.append(product.getName()).append(" was available")
+                context.append(amount.number).append(" ").append(product.getName().name).append(" was available")
                         .append(System.lineSeparator());
                 return 1;
             } else {
-                context.append(product.getName()).append(" was not available")
+                context.append(amount.number).append(" ").append(product.getName().name).append(" was not available")
                         .append(System.lineSeparator());
                 return 0;
             }

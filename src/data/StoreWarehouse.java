@@ -62,7 +62,7 @@ public class StoreWarehouse {
     private static void storeShelfValidProducts(Shelf shelf, JSONObject storedShelf) {
         JSONArray validProductsArray = new JSONArray();
         for (Product product : shelf.getValidProductData()) {
-            validProductsArray.add(product.getName());
+            validProductsArray.add(product.getName().name);
         }
         storedShelf.put("validProducts", validProductsArray);
     }
@@ -71,10 +71,10 @@ public class StoreWarehouse {
         JSONArray currentProductArray = new JSONArray();
         Map<Product, Num> products = shelf.getInventoryData();
 
-        products.forEach((product, integer) -> {
+        products.forEach((product, num) -> {
             JSONObject productObject = new JSONObject();
-            productObject.put("name", product.getName());
-            productObject.put("quantity", integer);
+            productObject.put("name", product.getName().name);
+            productObject.put("quantity", num.number);
             currentProductArray.add(productObject);
         });
 

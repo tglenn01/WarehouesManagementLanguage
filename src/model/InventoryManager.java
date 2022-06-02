@@ -33,13 +33,14 @@ public class InventoryManager {
 
     public static void execute() throws IOException, ParseException, ProductNotValidOnShelfException {
         initWarehouse();
+        loadShelvesWithData(warehouse);
         initRobot();
 
         WarehouseRobotLexer lexer = tokenize();
         Program parsedProgram = parse(lexer);
         StringBuilder stringBuilder = evaluate(parsedProgram);
 
-        System.out.println("Output " + stringBuilder);
+        System.out.println("Output: \n" + stringBuilder);
 
         saveWarehouse();
     }
@@ -49,7 +50,7 @@ public class InventoryManager {
         Warehouse warehouse = warehouseFactory.buildWarehouse();
         InventoryManager.warehouse = warehouse;
 
-        LoadWarehouse.loadWarehouse(warehouse, DATA_FILE_LOCATION);
+        // LoadWarehouse.loadWarehouse(warehouse, DATA_FILE_LOCATION);
     }
 
     private static void initRobot() {
@@ -57,7 +58,7 @@ public class InventoryManager {
     }
 
     private static WarehouseRobotLexer tokenize() throws IOException {
-        WarehouseRobotLexer lexer = new WarehouseRobotLexer(CharStreams.fromFileName("./inputData/simpleInput.txt"));
+        WarehouseRobotLexer lexer = new WarehouseRobotLexer(CharStreams.fromFileName("./inputData/simpleConditional.txt"));
         for (Token token : lexer.getAllTokens()) {
             System.out.println(token);
         }

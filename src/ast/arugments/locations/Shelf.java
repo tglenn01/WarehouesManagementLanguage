@@ -155,7 +155,10 @@ public class Shelf extends Argument implements Location {
 
     public boolean isProductValidGivenName(Name name) {
         for (Product product : validProducts) {
-            if (product.getName().equals(name)) {
+            String productName = product.getName().name;
+            String stringName = name.name;
+
+            if (productName.equals(stringName)) {
                 return true;
             }
         }
@@ -171,7 +174,9 @@ public class Shelf extends Argument implements Location {
             return false;
         }
 
-        return inventory.get(product).number >= amountNeeded.number;
+        Integer currentAmount = inventory.get(product).number;
+
+        return currentAmount >= amountNeeded.number;
     }
 
     public Num getAmountOfProductLeft(Product product) throws ProductNotValidOnShelfException {

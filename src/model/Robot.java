@@ -48,10 +48,10 @@ public class Robot {
         Inventory pickedUpProductMap;
 
         pickedUpProductMap = pickUpProductFromShelf(context, product, amount, shelf);
-        storeProductsOnRobot(product, pickedUpProductMap, inventoryName);
+        storeProductsOnRobot(context, product, pickedUpProductMap, inventoryName);
     }
 
-    private void storeProductsOnRobot(Product product, Inventory pickedUpProductMap, Name inventoryName) {
+    private void storeProductsOnRobot(StringBuilder context, Product product, Inventory pickedUpProductMap, Name inventoryName) {
         Inventory workingInventory = currentInventories.get(inventoryName);
 
         for (Map.Entry<Product, Num> productEntry : pickedUpProductMap.entrySet()) {
@@ -67,6 +67,13 @@ public class Robot {
             }
 
             workingInventory.put(product, newAmount);
+            context.append("Robot has ")
+                    .append(newAmount.number)
+                    .append(" ")
+                    .append(product.getName().name)
+                    .append(" in inventory ")
+                    .append(inventoryName.name)
+                    .append(System.lineSeparator());
         }
     }
 
@@ -74,15 +81,37 @@ public class Robot {
         Inventory pickedUpProductMap;
         try {
             pickedUpProductMap = shelf.pickUpProduct(product, amount);
+
+            context.append("Robot picked up ")
+                    .append(pickedUpProductMap.get(product).number)
+                    .append(" ")
+                    .append(product.getName().name)
+                    .append(System.lineSeparator());
+
         } catch (InsufficientProductsException e) {
             Num amountLeft = shelf.getAmountOfProductLeft(product);
+
+            if (amountLeft.number == 0) {
+                context.append("There was no ")
+                        .append(product.getName().name)
+                        .append(" at shelf left ")
+                        .append(shelf.getWarehouseLocation())
+                        .append(", call restock to restock product!")
+                        .append(System.lineSeparator());
+
+                Inventory emptyInventory = new Inventory();
+                emptyInventory.put(product, new Num(0));
+                return emptyInventory;
+            }
+
             context.append("There was not enough ")
-                    .append(product.getName())
+                    .append(product.getName().name)
                     .append(" at shelf ")
                     .append(shelf.getWarehouseLocation())
                     .append(" getting all ")
-                    .append(amountLeft)
-                    .append("  left instead");
+                    .append(amountLeft.number)
+                    .append("  left instead")
+                    .append(System.lineSeparator());
             try {
                 pickedUpProductMap = shelf.pickUpProduct(product, amountLeft);
             } catch (InsufficientProductsException ex) {
@@ -187,6 +216,10 @@ public class Robot {
         FulfilledOrder fulfilledOrder = new FulfilledOrder(fulfillInventory);
 
         return FrontHouse.getInstance().fulfill(order, fulfilledOrder);
+    }
+
+    public void createNewInventory(Name inventoryName) {
+        this.currentInventories.put(inventoryName, new Inventory());
     }
 
     // returns robots current location
