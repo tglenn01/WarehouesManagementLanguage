@@ -1,0 +1,12 @@
+create order customerOrder1 with 3 Coffee, 1 Watermelon;
+
+create products returnProducts;
+
+goTo Coffee;
+pickup 5 Coffee to products returnProducts;
+
+goTo Watermelon;
+pickup 1 Watermelon to products returnProducts;
+
+goTo fronthouse;
+fulfill customerOrder1 with products returnProducts;

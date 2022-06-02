@@ -1,0 +1,11 @@
+Created new order customerOrder1 with inventory [Watermelon, Coffee]
+Created new product inventory returnProducts
+The robot went to shelf # 15
+Robot picked up 5 Coffee
+Robot has 5 Coffee in inventory returnProducts
+The robot went to shelf # 5
+Robot picked up 1 Watermelon
+Robot has 1 Watermelon in inventory returnProducts
+Robot went to the front of house
+We had all of the Watermelon you requested!
+We had all of the Coffee you requested!
