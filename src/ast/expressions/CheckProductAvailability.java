@@ -1,15 +1,17 @@
 package src.ast.expressions;
 
 import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 
-public class CheckAvailability extends Expression {
+public class CheckProductAvailability extends Expression {
     public Product product;
-    public Integer amount;
+    public Num amount;
 
-    public CheckAvailability(Product product, Integer amount) {
+    public CheckProductAvailability(Product product, Num amount) {
         this.product = product;
         this.amount = amount;
+        this.nodeTitle = "Check Product Availability";
     }
 
     @Override

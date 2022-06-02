@@ -5,6 +5,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import src.ast.arugments.Name;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.Shelf;
 import src.model.Warehouse;
@@ -49,7 +51,7 @@ public class LoadWarehouse {
     private static void loadShelfValidProducts(Integer shelfLocation, JSONObject shelfData, Shelf warehouseShelf) {
         List<String> validShelfProducts = (List<String>) shelfData.get("validProducts");
         for (String name : validShelfProducts) {
-            warehouseShelf.addProductToShelf(new Product(name, shelfLocation));
+            warehouseShelf.addProductToShelf(new Product(new Name(name), shelfLocation));
         }
     }
 
@@ -60,9 +62,9 @@ public class LoadWarehouse {
             JSONObject shelfProduct = (JSONObject) productInShelfInventory;
 
             String productName = (String) shelfProduct.get("name");
-            Integer productQuantity = ((Long) shelfProduct.get("quantity")).intValue();
+            Num productQuantity = new Num( ((Long) shelfProduct.get("quantity")).intValue() );
 
-            Product createdProduct = new Product(productName, shelfLocation);
+            Product createdProduct = new Product(new Name(productName), shelfLocation);
 
             warehouseShelf.restockProduct(createdProduct, productQuantity);
         }

@@ -6,7 +6,7 @@ CREATE_PRODUCTS:      'create products' -> mode(PRODUCTS_MODE);
 
 // structures
 EVERY:                'every' -> mode(VARIABLE_MODE);
-IF_NOT:               'if not';
+IF_NOT:               'ifNot';
 IF:                   'if';
 
 // statements
@@ -18,7 +18,10 @@ FULFILL:              'fulfill' -> mode(ORDER_MODE);
 ADD:                  'add';
 
 // expressions
-CHECK_AVAILABILTIY:   'check availability of' -> mode(ORDER_MODE);
+
+CHECK_ORDER_AVAILABILTIY:   'check availability of order' -> mode(ORDER_MODE);
+CHECK_PRODUCTS_AVAILABILTIY:   'check availability of products';
+
 
 // individual tokens
 WITH_ORDER:           'with order' -> mode(ORDER_MODE);
@@ -29,6 +32,8 @@ IN_PRODUCTS:          'in products' -> mode(PRODUCTS_MODE);
 
 TO_ORDER:             'to order' -> mode(ORDER_MODE);
 TO_PRODUCTS:          'to products' -> mode(PRODUCTS_MODE);
+
+FROM_PRODUCTS:        'from products' -> mode(PRODUCTS_MODE);
 
 WITH:                 'with';
 OF:                   'of' ;
@@ -61,6 +66,7 @@ mode PRODUCTS_MODE;
 
 PRODUCTS_PRODUCT:     PRODUCT -> mode(DEFAULT_MODE);
 RETURN_PRODUCTS:      [a-zA-Z_]+ -> mode(DEFAULT_MODE);
+NUM_PRODUCTS:         [0-9]+;
 PRODUCTS_WHITE_SPACE: [ \t]+ -> skip;
 
 mode VARIABLE_MODE;
@@ -68,6 +74,7 @@ mode VARIABLE_MODE;
 VARIABLE_PRODUCT:     PRODUCT -> mode(DEFAULT_MODE);
 VARIABLE_FRONTHOUSE:  FRONTHOUSE -> mode(DEFAULT_MODE);
 VARIABLE_NAME:        [a-zA-Z_]+ -> mode(DEFAULT_MODE);
+NUM_VARIABLE:         [0-9]+;
 VARIABLE_WHITE_SPACE: [ \t]+ -> skip;
 
 

@@ -1,13 +1,17 @@
 package src.ast.statements;
 
 import src.ast.WarehouseRobotVisitor;
+import src.ast.arugments.Name;
 import src.ast.arugments.orders.CustomerOrder;
 
 public class Fulfill extends Statement {
-    public CustomerOrder customerOrder;
+    public Name customerOrderName;
+    public Name inventoryName;
 
-    public Fulfill(CustomerOrder customerOrder) {
-        this.customerOrder  = customerOrder;
+    public Fulfill(Name customerOrderName, Name inventoryName) {
+        this.customerOrderName  = customerOrderName;
+        this.inventoryName = inventoryName;
+        this.nodeTitle = "Fulfill";
     }
 
     @Override

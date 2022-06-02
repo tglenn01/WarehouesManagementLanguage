@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
 import org.json.simple.parser.ParseException;
 import src.ast.Program;
+import src.ast.arugments.Name;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.Shelf;
 import src.ast.evaluators.Evaluator;
@@ -31,13 +33,14 @@ public class InventoryManager {
 
     public static void execute() throws IOException, ParseException, ProductNotValidOnShelfException {
         initWarehouse();
+        loadShelvesWithData(warehouse);
         initRobot();
 
         WarehouseRobotLexer lexer = tokenize();
         Program parsedProgram = parse(lexer);
         StringBuilder stringBuilder = evaluate(parsedProgram);
 
-        System.out.println("Output " + stringBuilder);
+        System.out.println("Output: \n" + stringBuilder);
 
         saveWarehouse();
     }
@@ -47,7 +50,7 @@ public class InventoryManager {
         Warehouse warehouse = warehouseFactory.buildWarehouse();
         InventoryManager.warehouse = warehouse;
 
-        LoadWarehouse.loadWarehouse(warehouse, DATA_FILE_LOCATION);
+        // LoadWarehouse.loadWarehouse(warehouse, DATA_FILE_LOCATION);
     }
 
     private static void initRobot() {
@@ -55,7 +58,7 @@ public class InventoryManager {
     }
 
     private static WarehouseRobotLexer tokenize() throws IOException {
-        WarehouseRobotLexer lexer = new WarehouseRobotLexer(CharStreams.fromFileName("./inputData/simpleInput.txt"));
+        WarehouseRobotLexer lexer = new WarehouseRobotLexer(CharStreams.fromFileName("./inputData/simpleConditional.txt"));
         for (Token token : lexer.getAllTokens()) {
             System.out.println(token);
         }
@@ -92,9 +95,13 @@ public class InventoryManager {
 
         for (int i = 1; i <= 25; i++) {
             Shelf shelf = warehouse.getShelfAtLocation(i);
-            Product newProduct = new Product(productMasterList[i], i);
+            Product newProduct = new Product(new Name(productMasterList[i]), i);
             shelf.addProductToShelf(newProduct);
-            shelf.restockProduct(newProduct, random.nextInt(max - min) + min);
+            shelf.restockProduct(newProduct, new Num(random.nextInt(max - min) + min));
         }
+    }
+
+    public static Warehouse getWarehouse() {
+        return warehouse;
     }
 }

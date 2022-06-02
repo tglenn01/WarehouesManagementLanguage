@@ -1,6 +1,8 @@
 package src.model;
 
 import exceptions.*;
+import src.ast.arugments.Name;
+import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
 import src.ast.arugments.locations.Location;
@@ -13,11 +15,11 @@ import java.util.Map;
 
 public class Robot {
     private Location currentLocation;
-    private Inventory currentInventory;
+    private final Map<Name, Inventory> currentInventories;
 
     public Robot() {
         currentLocation = FrontHouse.getInstance();
-        currentInventory = new Inventory();
+        currentInventories = new HashMap<>();
     }
 
     /**
@@ -28,9 +30,13 @@ public class Robot {
      * @throws ProductNotValidOnShelfException : throws if product is not stored in current shelf
      * @throws InvalidLocationException        : throws if the robot is told to pickup while at an invalid location
      */
-    public void pickup(StringBuilder context, Product product, Integer amount) throws ProductNotValidOnShelfException, InvalidLocationException {
+    public void pickup(StringBuilder context, Product product, Num amount, Name inventoryName) throws ProductNotValidOnShelfException, InvalidLocationException, RobotDoesNotHaveInventoryException {
         if (currentLocation == FrontHouse.getInstance()) {
             throw new InvalidLocationException("Robot trying to pick up product while at the Front of House");
+        }
+
+        if (!currentInventories.containsKey(inventoryName)) {
+            throw new RobotDoesNotHaveInventoryException(inventoryName.name);
         }
 
         Shelf shelf = (Shelf) currentLocation;
@@ -42,39 +48,70 @@ public class Robot {
         Inventory pickedUpProductMap;
 
         pickedUpProductMap = pickUpProductFromShelf(context, product, amount, shelf);
-        storeProductsOnRobot(product, pickedUpProductMap);
+        storeProductsOnRobot(context, product, pickedUpProductMap, inventoryName);
     }
 
-    private void storeProductsOnRobot(Product product, Map<Product, Integer> pickedUpProductMap) {
-        for (Map.Entry<Product, Integer> productEntry : pickedUpProductMap.entrySet()) {
+    private void storeProductsOnRobot(StringBuilder context, Product product, Inventory pickedUpProductMap, Name inventoryName) {
+        Inventory workingInventory = currentInventories.get(inventoryName);
+
+        for (Map.Entry<Product, Num> productEntry : pickedUpProductMap.entrySet()) {
             Product pickedUpProduct = productEntry.getKey();
-            Integer pickedUpProductAmount = productEntry.getValue();
+            Num pickedUpProductAmount = productEntry.getValue();
 
-            int newAmount;
+            Num newAmount;
 
-            if (currentInventory.containsKey(pickedUpProduct)) {
-                newAmount = currentInventory.get(pickedUpProduct) + pickedUpProductAmount;
+            if (workingInventory.containsKey(pickedUpProduct)) {
+                newAmount = Num.add(workingInventory.get(pickedUpProduct), pickedUpProductAmount);
             } else {
                 newAmount = pickedUpProductAmount;
             }
 
-            currentInventory.put(product, newAmount);
+            workingInventory.put(product, newAmount);
+            context.append("Robot has ")
+                    .append(newAmount.number)
+                    .append(" ")
+                    .append(product.getName().name)
+                    .append(" in inventory ")
+                    .append(inventoryName.name)
+                    .append(System.lineSeparator());
         }
     }
 
-    private Inventory pickUpProductFromShelf(StringBuilder context, Product product, Integer amount, Shelf shelf) throws ProductNotValidOnShelfException {
+    private Inventory pickUpProductFromShelf(StringBuilder context, Product product, Num amount, Shelf shelf) throws ProductNotValidOnShelfException {
         Inventory pickedUpProductMap;
         try {
             pickedUpProductMap = shelf.pickUpProduct(product, amount);
+
+            context.append("Robot picked up ")
+                    .append(pickedUpProductMap.get(product).number)
+                    .append(" ")
+                    .append(product.getName().name)
+                    .append(System.lineSeparator());
+
         } catch (InsufficientProductsException e) {
-            int amountLeft = shelf.getAmountOfProductLeft(product);
+            Num amountLeft = shelf.getAmountOfProductLeft(product);
+
+            if (amountLeft.number == 0) {
+                context.append("There was no ")
+                        .append(product.getName().name)
+                        .append(" at shelf left ")
+                        .append(shelf.getWarehouseLocation())
+                        .append(", call restock to restock product!")
+                        .append(System.lineSeparator());
+
+                Inventory emptyInventory = new Inventory();
+                emptyInventory.put(product, new Num(0));
+                return emptyInventory;
+            }
+
             context.append("There was not enough ")
-                    .append(product.getName())
+                    .append(product.getName().name)
                     .append(" at shelf ")
                     .append(shelf.getWarehouseLocation())
                     .append(" getting all ")
-                    .append(amountLeft)
-                    .append("  left instead");
+                    .append(amountLeft.number)
+                    .append("  left instead")
+                    .append(System.lineSeparator());
             try {
                 pickedUpProductMap = shelf.pickUpProduct(product, amountLeft);
             } catch (InsufficientProductsException ex) {
@@ -91,16 +128,22 @@ public class Robot {
      *
      * @param product: product to drop off
      * @throws InvalidLocationException:  throws if dropping off item at invalid location
-     * @throws RobotDoesNotHaveException: throws if robot does not have given product
+     * @throws RobotDoesNotHaveProductException : throws if robot does not have given product
      */
-    public void dropOff(Product product) throws InvalidLocationException, RobotDoesNotHaveException, ProductNotValidOnShelfException {
+    public void dropOff(Product product, Name inventoryToTakeFrom) throws InvalidLocationException, RobotDoesNotHaveProductException, ProductNotValidOnShelfException, RobotDoesNotHaveInventoryException {
+        if (!currentInventories.containsKey(inventoryToTakeFrom)) {
+            throw new RobotDoesNotHaveInventoryException(inventoryToTakeFrom.name);
+        }
+
         if (currentLocation == FrontHouse.getInstance()) {
             throw new InvalidLocationException("Robot trying to drop off product while at the Front of House." +
                     " Are you looking to fulfill order instead?");
         }
 
-        if (!currentInventory.containsKey(product)) {
-            throw new RobotDoesNotHaveException(product);
+        Inventory workingInventory = currentInventories.get(inventoryToTakeFrom);
+
+        if (workingInventory.containsKey(product)) {
+            throw new RobotDoesNotHaveProductException(product);
         }
 
         Shelf shelf = (Shelf) currentLocation;
@@ -109,9 +152,9 @@ public class Robot {
             throw new ProductNotValidOnShelfException(product, shelf.getWarehouseLocation());
         }
 
-        shelf.restockProduct(product, currentInventory.get(product));
+        shelf.restockProduct(product, workingInventory.get(product));
 
-        currentInventory.remove(product);
+        workingInventory.remove(product);
     }
 
 
@@ -131,36 +174,41 @@ public class Robot {
      * @param order: The customer order that needs to be fulfilled
      * @throws NotFrontOfHouseException: throws if robot is not currently at the front of house
      */
-    public StringBuilder fulfill(CustomerOrder order) throws NotFrontOfHouseException {
+    public StringBuilder fulfill(CustomerOrder order, Name inventoryName) throws NotFrontOfHouseException, RobotDoesNotHaveInventoryException {
         if (this.currentLocation != FrontHouse.getInstance()) {
             throw new NotFrontOfHouseException();
         }
 
+        if (!currentInventories.containsKey(inventoryName)) {
+            throw new RobotDoesNotHaveInventoryException(inventoryName.name);
+        }
+
+        Inventory workingInventory = currentInventories.get(inventoryName);
 
         Inventory fulfillInventory = new Inventory();
 
-        for (Map.Entry<Product, Integer> entry : order.getOrderData().entrySet()) {
+        for (Map.Entry<Product, Num> entry : order.getOrderData().entrySet()) {
             Product productNeeded = entry.getKey();
-            Integer amountNeeded = entry.getValue();
+            Num amountNeeded = entry.getValue();
 
-            if (currentInventory.containsKey(productNeeded)) {
-                Integer currentAmountOfProductInInventory = currentInventory.get(productNeeded);
+            if (workingInventory.containsKey(productNeeded)) {
+                Num currentAmountOfProductInInventory = workingInventory.get(productNeeded);
 
-                int amountToAddToFulfillInventory;
+                Num amountToAddToFulfillInventory;
 
-                if (currentAmountOfProductInInventory <= amountNeeded) {
+                if (currentAmountOfProductInInventory.number <= amountNeeded.number) {
                     // if the robot has less than or just enough of the product
                     amountToAddToFulfillInventory = currentAmountOfProductInInventory;
-                    currentInventory.remove(productNeeded);
+                    workingInventory.remove(productNeeded);
                 } else {
                     // if the robot has more than enough
                     amountToAddToFulfillInventory = amountNeeded;
-                    currentInventory.put(productNeeded, currentInventory.get(productNeeded) - amountNeeded);
+                    workingInventory.put(productNeeded, Num.subtract(workingInventory.get(productNeeded), amountNeeded));
                 }
 
                 fulfillInventory.put(productNeeded, amountToAddToFulfillInventory);
             } else {
-                fulfillInventory.put(productNeeded, 0);
+                fulfillInventory.put(productNeeded, new Num(0));
             }
         }
 
@@ -168,6 +216,10 @@ public class Robot {
         FulfilledOrder fulfilledOrder = new FulfilledOrder(fulfillInventory);
 
         return FrontHouse.getInstance().fulfill(order, fulfilledOrder);
+    }
+
+    public void createNewInventory(Name inventoryName) {
+        this.currentInventories.put(inventoryName, new Inventory());
     }
 
     // returns robots current location
