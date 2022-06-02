@@ -18,12 +18,15 @@ import src.parser.ParseTreeToAST;
 import src.parser.WarehouseRobotLexer;
 import src.parser.WarehouseRobotParser;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
 public class InventoryManager {
 
     public static final String DATA_FILE_LOCATION = "./data/products.json";
+    public static final String INPUT_FILE_LOCATION = "./data/input.txt";
+    public static final String OUTPUT_FILE_LOCATION = "./data/output.txt";
 
     public static Warehouse warehouse;
     public static Robot robot;
@@ -31,7 +34,7 @@ public class InventoryManager {
     public InventoryManager() {
     }
 
-    public static void execute() throws IOException, ParseException, ProductNotValidOnShelfException {
+    public static void execute() throws IOException, ProductNotValidOnShelfException {
         initWarehouse();
         loadShelvesWithData(warehouse);
         initRobot();
@@ -40,15 +43,15 @@ public class InventoryManager {
         Program parsedProgram = parse(lexer);
         StringBuilder stringBuilder = evaluate(parsedProgram);
 
+        saveToOutputFile(stringBuilder);
         System.out.println("Output: \n" + stringBuilder);
 
         saveWarehouse();
     }
 
-    private static void initWarehouse() throws IOException, ParseException, ProductNotValidOnShelfException {
+    private static void initWarehouse() {
         WarehouseFactory warehouseFactory = new NormalWarehouseFactory();
-        Warehouse warehouse = warehouseFactory.buildWarehouse();
-        InventoryManager.warehouse = warehouse;
+        InventoryManager.warehouse = warehouseFactory.buildWarehouse();
 
         // LoadWarehouse.loadWarehouse(warehouse, DATA_FILE_LOCATION);
     }
@@ -58,7 +61,7 @@ public class InventoryManager {
     }
 
     private static WarehouseRobotLexer tokenize() throws IOException {
-        WarehouseRobotLexer lexer = new WarehouseRobotLexer(CharStreams.fromFileName("./inputData/simpleConditional.txt"));
+        WarehouseRobotLexer lexer = new WarehouseRobotLexer(CharStreams.fromFileName(INPUT_FILE_LOCATION));
         for (Token token : lexer.getAllTokens()) {
             System.out.println(token);
         }
@@ -83,6 +86,15 @@ public class InventoryManager {
         System.out.println("Done evaluating");
         return stringBuilder;
     }
+
+    private static void saveToOutputFile(StringBuilder context) {
+        try (FileWriter file = new FileWriter(OUTPUT_FILE_LOCATION)) {
+            file.write(context.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private static void saveWarehouse() throws IOException {
         StoreWarehouse.storeWarehouse(warehouse, DATA_FILE_LOCATION);
