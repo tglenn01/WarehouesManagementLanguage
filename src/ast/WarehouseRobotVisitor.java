@@ -32,7 +32,7 @@ public interface WarehouseRobotVisitor<C,T> {
     T visit(C context, GoTo goToNode);
     T visit(C context, PickUp pickUpNode);
     T visit(C context, DropOff dropOffNode);
-    T visit(C context, RestockOrder restockOrderNode);
+    T visit(C context, Restock restockNode);
     T visit(C context, Fulfill fulfillNode);
     T visit(C context, Add addNode);
 

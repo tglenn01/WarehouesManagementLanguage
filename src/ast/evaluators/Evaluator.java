@@ -254,16 +254,17 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
     }
 
     @Override
-    public Integer visit(StringBuilder context, RestockOrder restockOrderNode) {
-        Shelf shelf = restockOrderNode.shelf;
-        Product product = restockOrderNode.product;
-        Num amount = restockOrderNode.amount;
+    public Integer visit(StringBuilder context, Restock restockNode) {
+        Product product = restockNode.product;
+        Num amount = restockNode.amount;
 
         try {
+            Shelf shelf = warehouse.getShelfAtLocation(product.getProductShelfLocation());
+
             shelf.restockProduct(product, amount);
             context.append("Robot restocked ")
-                    .append(amount).append(" ")
-                    .append(product.getName())
+                    .append(amount.number).append(" ")
+                    .append(product.getName().name)
                     .append(" at location ")
                     .append(shelf.getLocationName())
                     .append(System.lineSeparator());
@@ -324,7 +325,7 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
             CheckProductAvailability checkProductAvailability = new CheckProductAvailability(entry.getKey(), entry.getValue());
             if (checkProductAvailability.accept(context, this) == 0) {
                 return 0;
-            };
+            }
         }
 
         return 1;

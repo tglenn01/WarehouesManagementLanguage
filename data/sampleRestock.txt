@@ -1,0 +1,13 @@
+create order coffeeOrder1 with 9 Coffee;
+
+create products returnCoffeeProducts;
+
+ifNot check availability of products 9 Coffee {
+restock 10 Coffee;
+}
+
+goTo Coffee;
+pickup 5 Coffee to products returnCoffeeProducts;
+
+goTo fronthouse;
+fulfill coffeeOrder1 with products returnCoffeeProducts;

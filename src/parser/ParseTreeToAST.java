@@ -1,8 +1,6 @@
 package src.parser;
 
 import exceptions.NoSuchProductException;
-import org.antlr.runtime.MismatchedTokenException;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import src.ast.Node;
 import src.ast.Program;
 import src.ast.RunnableNode;
@@ -10,9 +8,7 @@ import src.ast.arugments.Name;
 import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
-import src.ast.arugments.locations.Shelf;
 import src.ast.calls.Call;
-import src.ast.calls.Create;
 import src.ast.calls.CreateOrder;
 import src.ast.calls.CreateProducts;
 import src.ast.expressions.CheckOrderAvailability;
@@ -24,9 +20,7 @@ import src.ast.structures.Structure;
 import src.ast.structures.conditionals.If;
 import src.ast.structures.conditionals.IfNot;
 import src.model.Inventory;
-import src.model.InventoryManager;
 import src.model.ProductMasterList;
-import src.model.Warehouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,8 +94,8 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
             return visitPickup(ctx.pickup());
         } else if (ctx.dropoff() != null) {
             return visitDropoff(ctx.dropoff());
-        } else if (ctx.restock_order() != null) {
-            return visitRestock_order(ctx.restock_order());
+        } else if (ctx.restock() != null) {
+            return visitRestock(ctx.restock());
         } else if (ctx.fulfill() != null) {
             return visitFulfill(ctx.fulfill());
         } else if (ctx.add() != null) {
@@ -316,11 +310,12 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
     }
 
     @Override
-    public RestockOrder visitRestock_order(WarehouseRobotParser.Restock_orderContext ctx) {
+    public Restock visitRestock(WarehouseRobotParser.RestockContext ctx) {
 
         // doing this wrong
 
-        Num num = new Num(RestockOrder.NUM_RESTOCK);
+        Num num = new Num(Restock.NUM_RESTOCK);
+
 
         if (ctx.PRODUCTS_PRODUCT() != null) {
             try {
@@ -332,19 +327,16 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
                             " is not currently assigned to a shelf");
                 }
 
-                Shelf shelf = InventoryManager.warehouse.getShelfAtLocation(product.getProductShelfLocation());
-
-                return new RestockOrder(shelf, product, num);
+                return new Restock(product, num);
 
             } catch (NoSuchProductException e) {
                 throw new RuntimeException(e.getMessage());
             }
-        } else if (ctx.products_varname() != null) {
-            return null;
+        } else {
+            throw new RuntimeException("Statement parse tree with invalid context information");
         }
 
 
-        return null;
     }
 
     @Override
