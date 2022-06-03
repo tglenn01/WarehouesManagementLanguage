@@ -10,28 +10,33 @@ import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
 import src.ast.arugments.locations.Shelf;
+import src.ast.arugments.orders.CustomerOrder;
+import src.ast.arugments.orders.FulfilledOrder;
 import src.ast.arugments.orders.Order;
 import src.ast.calls.CreateOrder;
 import src.ast.calls.CreateProducts;
 import src.ast.expressions.CheckOrderAvailability;
-import src.ast.expressions.Expression;
-import src.ast.structures.conditionals.If;
-import src.ast.structures.conditionals.IfNot;
 import src.ast.expressions.CheckProductAvailability;
-import src.ast.arugments.orders.CustomerOrder;
-import src.ast.arugments.orders.FulfilledOrder;
+import src.ast.expressions.Expression;
 import src.ast.statements.*;
 import src.ast.structures.Every;
-import src.model.*;
+import src.ast.structures.conditionals.If;
+import src.ast.structures.conditionals.IfNot;
+import src.model.Inventory;
+import src.model.InventoryManager;
+import src.model.Robot;
+import src.model.Warehouse;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> {
     private final Robot robot = InventoryManager.robot;
     private final Warehouse warehouse = InventoryManager.warehouse;
     private final Map<Name, Order> orderMap = new HashMap<>();
     private final Map<Name, Inventory> inventoryVarMap = new HashMap<>();
-    // private final List<Product> productTable = new ArrayList<>();
+    private final Map<Name, Product> iterableMap = new HashMap<>();
 
     @Override
     public Integer visit(StringBuilder context, Program programNode) {
@@ -92,39 +97,21 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
     @Override
     public Integer visit(StringBuilder context, Every everyNode) {
-        /*
-            a little bit of pain happening here, will come back to at end to fix
+        Order order = orderMap.get(everyNode.orderName);
 
+        for (Map.Entry<Product, Num> entry : order.getOrderData().entrySet()) {
+            context.append("Looping through product ").append(entry.getKey().getName().name).append(System.lineSeparator());
 
-            String varName = everyNode.varName;
-        String iterableName = everyNode.iterableName;
-        List<RunnableNode> runnableNodes = everyNode.runnableNodes;
+            iterableMap.put(everyNode.varName, entry.getKey());
 
-        if (orderMap.containsKey(iterableName)) {
-            context.append("Iterating over products in order ")
-                    .append(iterableName);
-
-            Set<Product> products = orderMap.get(iterableName).getOrderData().keySet();
-
-            for (Product product : products) {
-                productTable.add(product);
-
-                for (RunnableNode node : runnableNodes) {
-                    node.accept(context, this);
-                }
-
-                productTable.remove(product);
+            for (RunnableNode runnableNode : everyNode.runnableNodes) {
+                runnableNode.accept(context, this);
             }
 
+            iterableMap.remove(everyNode.varName);
 
-        } else if (inventoryVarMap.containsKey(iterableName)) {
-            context.append("Iterating over products in product inventory ")
-                    .append(iterableName);
-        } else {
-            context.append("Unable to find iterable with name ").append(iterableName);
+            context.append("Finished looping product ").append(entry.getKey().getName().name).append(System.lineSeparator());
         }
-
-         */
 
         return null;
     }
@@ -196,10 +183,13 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
             Shelf shelf = warehouse.getShelfAtLocation(shelfLocation);
             context.append("The robot went to shelf # ").append(shelfLocation).append(System.lineSeparator());
             robot.goTo(shelf);
-        } else {
-            // TODO implement with for loops
-            context.append("TODO implement loop support").append(System.lineSeparator());
-            return null;
+        } else if (argument.getClass() == Name.class) {
+            Name varName = (Name) goToNode.argument;
+            Product product = iterableMap.get(varName);
+            Integer shelfLocation = product.getProductShelfLocation();
+            Shelf shelf = warehouse.getShelfAtLocation(shelfLocation);
+            context.append("The robot went to shelf # ").append(shelfLocation).append(System.lineSeparator());
+            robot.goTo(shelf);
         }
 
         return null;
@@ -213,10 +203,9 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
         try {
             if (argument.getClass() == Product.class) {
                 robot.pickup(context, (Product) argument, pickUpNode.amount, pickUpNode.inventoryName);
-            } else {
-                // TODO implement with for loops
-                context.append("TODO implement loop support").append(System.lineSeparator());
-                return null;
+            } else if (argument.getClass() == Name.class) {
+                Product product = iterableMap.get(pickUpNode.argument);
+                robot.pickup(context, product, pickUpNode.amount, pickUpNode.inventoryName);
             }
         } catch (ProductNotValidOnShelfException | InvalidLocationException | RobotDoesNotHaveInventoryException e) {
             context.append(e.getMessage());
@@ -233,10 +222,12 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
 
         if (argument.getClass() == Product.class) {
             product = (Product) argument;
-        } else {
-            // TODO for loop implementation
+        } else if (dropOffNode.argument.getClass() == Name.class) {
+            product = iterableMap.get(dropOffNode.argument);
             context.append("TODO implement loop support");
-            return null;
+        } else {
+            context.append("Drop off at invalid argument ").append(System.lineSeparator());
+            return 0;
         }
 
         try {
@@ -281,7 +272,6 @@ public class Evaluator implements WarehouseRobotVisitor<StringBuilder, Integer> 
         CustomerOrder customerOrder = (CustomerOrder) orderMap.get(orderName);
 
         try {
-            // TODO Come back and make sure this works
             context.append(robot.fulfill(customerOrder, fulfillNode.inventoryName));
         } catch (NotFrontOfHouseException | RobotDoesNotHaveInventoryException e) {
             context.append(e.getMessage());

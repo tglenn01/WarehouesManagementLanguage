@@ -8,12 +8,12 @@ import java.util.List;
 
 public class Every extends Structure {
     public Name varName;
-    public Name iterableName;
+    public Name orderName;
     public List<RunnableNode> runnableNodes;
 
-    public Every(Name varName, Name iterableName, List<RunnableNode> runnableNodes) {
+    public Every(Name varName, Name orderName, List<RunnableNode> runnableNodes) {
         this.varName = varName;
-        this.iterableName = iterableName;
+        this.orderName = orderName;
         this.runnableNodes = runnableNodes;
         this.nodeTitle = "Every";
     }

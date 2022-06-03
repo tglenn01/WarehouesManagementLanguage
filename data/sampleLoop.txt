@@ -1,0 +1,14 @@
+create order latteOrder1 with 5 Coffee, 2 Milk;
+
+restock 10 Coffee;
+restock 10 Milk;
+
+create products returnProducts;
+
+every product in order latteOrder1 {
+goTo product;
+pickup 5 product to products returnProducts;
+}
+
+goTo fronthouse
+fulfill latteOrder1 with products returnProducts;

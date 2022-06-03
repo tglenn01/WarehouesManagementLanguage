@@ -14,7 +14,6 @@ statement:         goto | pickup | dropoff | restock | fulfill | add;
 expression:        check_order_availability | check_product_availability ;
 
 // arguments
-iterable:          order_varname | products_varname ;
 order_varname:     CUSTOMER_ORDER ;
 products_varname:  RETURN_PRODUCTS ;
 variable_varname:  VARIABLE_NAME ;
@@ -24,7 +23,7 @@ create_order:      CREATE_ORDER order_varname (WITH NUM PRODUCT (COMMA NUM PRODU
 create_products:   CREATE_PRODUCTS products_varname SEMICOLON ;
 
 // structures
-loop:              EVERY variable_varname (IN_ORDER | IN_PRODUCTS) iterable LEFT_BRACE (runnable_nodes)* RIGHT_BRACE ;
+loop:              EVERY variable_varname IN_ORDER order_varname LEFT_BRACE (runnable_nodes)* RIGHT_BRACE ;
 if:                IF expression LEFT_BRACE (runnable_nodes)* RIGHT_BRACE ;
 if_not:            IF_NOT expression LEFT_BRACE (runnable_nodes)* RIGHT_BRACE ;
 

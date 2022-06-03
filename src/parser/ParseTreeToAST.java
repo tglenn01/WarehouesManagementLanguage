@@ -120,19 +120,6 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitIterable(WarehouseRobotParser.IterableContext ctx) {
-
-        if (ctx.order_varname() != null) {
-            return visitOrder_varname(ctx.order_varname());
-        } else if (ctx.products_varname() != null) {
-            return visitProducts_varname(ctx.products_varname());
-        } else {
-            throw new RuntimeException("Statement parse tree with invalid context information");
-        }
-
-    }
-
-    @Override
     public Name visitOrder_varname(WarehouseRobotParser.Order_varnameContext ctx) {
 
         if (ctx.CUSTOMER_ORDER() != null) {
@@ -194,7 +181,15 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
 
     @Override
     public Every visitLoop(WarehouseRobotParser.LoopContext ctx) {
-        return null;
+        Name variableName = new Name(ctx.variable_varname().VARIABLE_NAME().getText());
+        Name orderName = new Name(ctx.order_varname().CUSTOMER_ORDER().getText());
+        List<RunnableNode> runnableNodes = new ArrayList<>();
+
+        for (WarehouseRobotParser.Runnable_nodesContext runnableNodesContext : ctx.runnable_nodes()) {
+            runnableNodes.add(visitRunnable_nodes(runnableNodesContext));
+        }
+
+        return new Every(variableName, orderName, runnableNodes);
     }
 
     @Override
@@ -312,9 +307,7 @@ public class ParseTreeToAST extends WarehouseRobotParserBaseVisitor<Node> {
     @Override
     public Restock visitRestock(WarehouseRobotParser.RestockContext ctx) {
 
-        // doing this wrong
-
-        Num num = new Num(Restock.NUM_RESTOCK);
+        Num num = new Num(Integer.parseInt(ctx.NUM_PRODUCTS().getText()));
 
 
         if (ctx.PRODUCTS_PRODUCT() != null) {

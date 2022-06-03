@@ -34,9 +34,8 @@ public class InventoryManager {
     public InventoryManager() {
     }
 
-    public static void execute() throws IOException, ProductNotValidOnShelfException {
+    public static void execute() throws IOException, ProductNotValidOnShelfException, ParseException {
         initWarehouse();
-        loadShelvesWithData(warehouse);
         initRobot();
 
         WarehouseRobotLexer lexer = tokenize();
@@ -49,11 +48,11 @@ public class InventoryManager {
         saveWarehouse();
     }
 
-    private static void initWarehouse() {
+    private static void initWarehouse() throws IOException, ParseException, ProductNotValidOnShelfException {
         WarehouseFactory warehouseFactory = new NormalWarehouseFactory();
         InventoryManager.warehouse = warehouseFactory.buildWarehouse();
 
-        // LoadWarehouse.loadWarehouse(warehouse, DATA_FILE_LOCATION);
+        LoadWarehouse.loadWarehouse(warehouse, DATA_FILE_LOCATION);
     }
 
     private static void initRobot() {
