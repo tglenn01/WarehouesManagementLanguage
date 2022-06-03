@@ -38,7 +38,7 @@ function removeLog(){
     historyContainer = document.querySelector(".console-history");
   }
   else{
-    return;
+
   }
 }
 

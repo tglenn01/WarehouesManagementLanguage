@@ -5,9 +5,6 @@ import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.model.Inventory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class Order extends Argument {
     protected Inventory order;
 

@@ -12,7 +12,7 @@ import java.util.Objects;
 
 // The warehouse where all products are stored in their respective shelves
 public class Warehouse {
-    private Map<Integer, Shelf> shelves;
+    private final Map<Integer, Shelf> shelves;
 
     public Warehouse(Map<Integer, Shelf> filledShelves) {
         this.shelves = filledShelves;

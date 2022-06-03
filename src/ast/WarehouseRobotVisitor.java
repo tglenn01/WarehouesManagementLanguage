@@ -5,16 +5,16 @@ import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.ast.arugments.locations.FrontHouse;
 import src.ast.arugments.locations.Shelf;
+import src.ast.arugments.orders.CustomerOrder;
+import src.ast.arugments.orders.FulfilledOrder;
 import src.ast.calls.CreateOrder;
 import src.ast.calls.CreateProducts;
 import src.ast.expressions.CheckOrderAvailability;
-import src.ast.structures.conditionals.If;
-import src.ast.structures.conditionals.IfNot;
 import src.ast.expressions.CheckProductAvailability;
-import src.ast.arugments.orders.CustomerOrder;
-import src.ast.arugments.orders.FulfilledOrder;
 import src.ast.statements.*;
 import src.ast.structures.Every;
+import src.ast.structures.conditionals.If;
+import src.ast.structures.conditionals.IfNot;
 
 public interface WarehouseRobotVisitor<C,T> {
     T visit(C context, Program programNode);

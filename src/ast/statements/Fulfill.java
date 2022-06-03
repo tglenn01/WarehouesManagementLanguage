@@ -2,7 +2,6 @@ package src.ast.statements;
 
 import src.ast.WarehouseRobotVisitor;
 import src.ast.arugments.Name;
-import src.ast.arugments.orders.CustomerOrder;
 
 public class Fulfill extends Statement {
     public Name customerOrderName;

@@ -2,8 +2,6 @@ package src.ast.expressions;
 
 import src.ast.WarehouseRobotVisitor;
 import src.ast.arugments.Name;
-import src.ast.arugments.Num;
-import src.ast.arugments.Product;
 
 public class CheckOrderAvailability extends Expression {
     public Name orderName;

@@ -9,16 +9,18 @@ import src.ast.arugments.Num;
 import src.ast.arugments.Product;
 import src.model.Inventory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 // A shelf with an amount of products that are stored there
 public class Shelf extends Argument implements Location {
     // TODO: implement a max quantity of products in a shelf
     // public final static int MAX_QUANTITY_OF_PRODUCTS_IN_SHELF = 10;
 
-    private Inventory inventory;
-    private List<Product> validProducts;
-    private int warehouseLocation;
+    private final Inventory inventory;
+    private final List<Product> validProducts;
+    private final int warehouseLocation;
 
     public Shelf(Integer warehouseLocation, Inventory inventory, List<Product> validProducts) {
         this.warehouseLocation = warehouseLocation;
@@ -141,9 +143,7 @@ public class Shelf extends Argument implements Location {
             throw new ProductNotValidOnShelfException(product, this.warehouseLocation);
         }
 
-        if (inventory.containsKey(product)) {
-            inventory.remove(product);
-        }
+        inventory.remove(product);
 
         validProducts.remove(product);
     }
