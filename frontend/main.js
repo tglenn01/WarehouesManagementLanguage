@@ -67,10 +67,9 @@ download_button.addEventListener("click", function(){
   downloadFile(tmp_name + '.txt', total_string);
 });
 
-// const results_button = document.getElementById("output");
-// results_button.addEventListener("click", function()){
-  
-// }
+document.getElementById('output').addEventListener('click', function() {
+  fetch('../data/output.txt');
+});
 
 consoleInput.addEventListener("keyup", (e) => {
   const code = consoleInput.value.trim();
