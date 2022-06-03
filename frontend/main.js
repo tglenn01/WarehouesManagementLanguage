@@ -43,7 +43,6 @@ function removeLog(){
 }
 
 function downloadFile(filename, content){
-  alert(filename.length);
   if (input_number == 0){
     alert("No Robotcode command entered yet!");
     return;
@@ -68,10 +67,12 @@ download_button.addEventListener("click", function(){
   downloadFile(tmp_name + '.txt', total_string);
 });
 
+document.getElementById('output').addEventListener('click', function() {
+  fetch('../data/output.txt');
+});
 
 consoleInput.addEventListener("keyup", (e) => {
   const code = consoleInput.value.trim();
-
 
   let dynamic_mode = 0;
 
