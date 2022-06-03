@@ -67,10 +67,12 @@ download_button.addEventListener("click", function(){
   downloadFile(tmp_name + '.txt', total_string);
 });
 
-document.getElementById('output').addEventListener('click', function() {
-  fetch('../data/output.txt');
-});
-
+const openFileDialog = this.document.getElementById('open-file-dialog');
+if (openFileDialog){
+  if (e.target && e.target.files && e.target.files.length > 0) {
+    alert("results");
+}
+}
 consoleInput.addEventListener("keyup", (e) => {
   const code = consoleInput.value.trim();
 
